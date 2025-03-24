@@ -1,0 +1,13 @@
+﻿name: lego-inventory
+
+services:
+
+  db:
+    build:
+      dockerfile: lego-db.dockerfile
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: lego
+      POSTGRES_PASSWORD: oBR0257i4tu54bHMakU9hGI2vMCUQyg1
