@@ -11,6 +11,14 @@ It should build custom postgres dockerfile and initialize sample database from l
 docker-compose up
 ```
 
+## Scaffolding database
+
+Following script can be used to generate Entity Framework Core entities from existing database schema.
+
+```shell
+dotnet ef dbcontext scaffold name=lego --context-dir Data --output-dir Models Npgsql.EntityFrameworkCore.PostgreSQL -- --environment Development
+```
+
 ## Lego sample database license (lego.sql)
 
 Lego test database (lego.sql) is from here: https://github.com/neondatabase-labs/postgres-sample-dbs?tab=readme-ov-file#lego-database

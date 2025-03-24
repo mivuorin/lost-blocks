@@ -1,0 +1,6 @@
+@LostBlocks.Api_HostAddress = https://localhost:7128
+
+GET {{LostBlocks.Api_HostAddress}}/info
+Accept: application/json
+
+###
