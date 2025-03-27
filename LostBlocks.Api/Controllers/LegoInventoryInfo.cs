@@ -13,7 +13,7 @@ public class LegoInventoryInfo(LegoContext context) : ControllerBase
     public List<LegoInventory> Get()
     {
         return context
-            .LegoInventories
+            .Inventories
             .AsNoTracking()
             .ToList();
     }
