@@ -1,14 +1,12 @@
 ﻿using LostBlocks.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Xunit;
 
 namespace LostBlocks.Api.Test;
 
-public class DatabaseIntegrationTest
+public class DatabaseFixture : IDisposable, IAsyncDisposable
 {
-    [Fact]
-    public void Smoke()
+    public DatabaseFixture()
     {
         IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Development.json", false, true)
@@ -20,10 +18,20 @@ public class DatabaseIntegrationTest
             .UseNpgsql(config.GetConnectionString("lego"))
             .Options;
         
-        using var context = new LegoContext(options);
+        Context = new LegoContext(options);
+    }
 
-        var themes = context.Themes.Take(10).ToArray();
-        
-        Assert.NotEmpty(themes);
+    public LegoContext Context { get; set; }
+
+    public void Dispose()
+    {
+        Context.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await Context.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }

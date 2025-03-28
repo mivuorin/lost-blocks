@@ -7,7 +7,7 @@ namespace LostBlocks.Api.Controllers;
 
 [ApiController]
 [Route("info")]
-public class LegoInventoryInfo(LegoContext context) : ControllerBase
+public class InventoryInfo(LegoContext context) : ControllerBase
 {
     [HttpGet]
     public List<LegoInventory> Get()

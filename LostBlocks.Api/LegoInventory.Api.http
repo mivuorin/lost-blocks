@@ -1,6 +1,11 @@
-@LostBlocks.Api_HostAddress = https://localhost:7128
+@root = https://localhost:7128
 
-GET {{LostBlocks.Api_HostAddress}}/info
+GET {{root}}/info
+Accept: application/json
+
+###
+
+GET {{root}}/theme
 Accept: application/json
 
 ###

@@ -116,12 +116,20 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.SetNum)
                 .HasMaxLength(255)
                 .HasColumnName("set_num");
+            
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
+            
             entity.Property(e => e.NumParts).HasColumnName("num_parts");
             entity.Property(e => e.ThemeId).HasColumnName("theme_id");
             entity.Property(e => e.Year).HasColumnName("year");
+            
+            entity
+                .HasOne(e => e.Theme)
+                .WithMany(e => e.Sets)
+                .HasForeignKey(e => e.ThemeId)
+                .HasPrincipalKey(e => e.Id);
         });
 
         modelBuilder.Entity<LegoTheme>(entity =>
@@ -134,7 +142,14 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
+            
             entity.Property(e => e.ParentId).HasColumnName("parent_id");
+
+            entity
+                .HasOne(e => e.Parent)
+                .WithMany(e => e.Childs)
+                .HasForeignKey(e => e.ParentId)
+                .HasPrincipalKey(e => e.Id);
         });
     }
 }
