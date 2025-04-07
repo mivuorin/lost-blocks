@@ -9,3 +9,6 @@ GET {{root}}/theme
 Accept: application/json
 
 ###
+
+GET {{root}}/set/1
+Accept: application/json
