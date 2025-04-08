@@ -19,6 +19,11 @@ Following script can be used to generate Entity Framework Core entities from exi
 dotnet ef dbcontext scaffold name=lego --context-dir Data --output-dir Models Npgsql.EntityFrameworkCore.PostgreSQL -- --environment Development
 ```
 
+## Docker database container
+
+Project uses custom Postgres docker image [lego-db.dockerfile](lego-db.dockerfile) which is seeded from Lego sample database [lego.sql](lego.sql)
+and run with docker-compose [compose.yaml](compose.yaml)
+
 ## Lego sample database license (lego.sql)
 
 Lego test database (lego.sql) is from here: https://github.com/neondatabase-labs/postgres-sample-dbs?tab=readme-ov-file#lego-database
