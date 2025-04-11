@@ -1,7 +1,7 @@
 ﻿namespace LostBlocks.Api.Controllers;
 
 
-public record SetDto
+public record LegoSetDto
 {
     public required string SetNum { get; init; }
     public required string Name { get; init; }

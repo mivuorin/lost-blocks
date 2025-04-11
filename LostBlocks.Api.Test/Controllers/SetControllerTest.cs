@@ -35,7 +35,7 @@ public class SetControllerTest : DatabaseTest
         LegoTheme theme = Context.Themes.First();
         LegoSet set = Context.LegoSets.First(s => s.ThemeId == theme.Id);
 
-        var expected = new SetDto
+        var expected = new LegoSetDto
         {
             SetNum = set.SetNum,
             Name = set.Name,
@@ -45,7 +45,7 @@ public class SetControllerTest : DatabaseTest
 
         var result = await controller.Get(theme.Id);
 
-        SetDto actual = result.Single(dto => dto.SetNum == set.SetNum);
+        LegoSetDto actual = result.Single(dto => dto.SetNum == set.SetNum);
 
         actual.Should().Be(expected);
     }
