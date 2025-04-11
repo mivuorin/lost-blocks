@@ -16,6 +16,7 @@ public class DatabaseFixture : IDisposable, IAsyncDisposable
 
         var options = new DbContextOptionsBuilder<LegoContext>()
             .UseNpgsql(config.GetConnectionString("lego"))
+            .EnableDetailedErrors() // Enable detailed errors for tests
             .Options;
         
         Context = new LegoContext(options);
