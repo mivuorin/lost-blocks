@@ -23,13 +23,17 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseSerialColumns();
+        
         modelBuilder.Entity<LegoColor>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("lego_colors_pkey");
 
             entity.ToTable("lego_colors");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .HasDefaultValueSql("nextval('lego_colors_id_seq')");
             entity.Property(e => e.IsTrans)
                 .HasMaxLength(1)
                 .HasColumnName("is_trans");
@@ -47,7 +51,9 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
             entity.ToTable("lego_inventories");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .HasDefaultValueSql("nextval('lego_inventories_id_seq')");
             entity.Property(e => e.SetNum)
                 .HasMaxLength(255)
                 .HasColumnName("set_num");
@@ -101,7 +107,9 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
             entity.ToTable("lego_part_categories");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .HasDefaultValueSql("nextval('lego_part_categories_id_seq')");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -116,15 +124,15 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.SetNum)
                 .HasMaxLength(255)
                 .HasColumnName("set_num");
-            
+
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-            
+
             entity.Property(e => e.NumParts).HasColumnName("num_parts");
             entity.Property(e => e.ThemeId).HasColumnName("theme_id");
             entity.Property(e => e.Year).HasColumnName("year");
-            
+
             entity
                 .HasOne(e => e.Theme)
                 .WithMany(e => e.Sets)
@@ -138,11 +146,13 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
             entity.ToTable("lego_themes");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .HasDefaultValueSql("nextval('lego_themes_id_seq')");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
-            
+
             entity.Property(e => e.ParentId).HasColumnName("parent_id");
 
             entity
@@ -151,5 +161,10 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasForeignKey(e => e.ParentId)
                 .HasPrincipalKey(e => e.Id);
         });
+
+        modelBuilder.HasSequence<int>("lego_colors_id_seq");
+        modelBuilder.HasSequence<int>("lego_inventories_id_seq");
+        modelBuilder.HasSequence<int>("lego_part_categories_id_seq");
+        modelBuilder.HasSequence<int>("lego_themes_id_seq");
     }
 }

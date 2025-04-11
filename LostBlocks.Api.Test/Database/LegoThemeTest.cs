@@ -1,4 +1,5 @@
-﻿using LostBlocks.Api.Models;
+﻿using FluentAssertions;
+using LostBlocks.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -6,6 +7,24 @@ namespace LostBlocks.Api.Test.Database;
 
 public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
 {
+    [Fact]
+    public void Insert_with_generated_id()
+    {
+        var theme = new LegoTheme
+        {
+            ParentId = null,
+            Name = "Test Theme"
+        };
+
+        Context.Themes.Add(theme);
+        Context.SaveChanges();
+
+        theme.Id.Should().NotBe(0);
+
+        var actual = Context.Themes.Find(theme.Id);
+        actual.Should().NotBe(null);
+    }
+
     [Fact]
     public void Theme_has_many_child_themes()
     {
@@ -30,12 +49,12 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
             .LegoSets
             .Include(s => s.Theme)
             .First();
-        
+
         LegoTheme theme = fixture.Context
             .Themes
             .Include(t => t.Sets)
             .Single(t => t.Id == set.ThemeId);
-        
+
         Assert.Equal(theme, set.Theme);
         Assert.Contains(set, theme.Sets);
     }
