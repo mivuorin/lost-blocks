@@ -4,8 +4,7 @@ using Xunit;
 
 namespace LostBlocks.Api.Test.Database;
 
-[Collection("Database")]
-public class LegoThemeTest(DatabaseFixture fixture)
+public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
 {
     [Fact]
     public void Theme_has_many_child_themes()

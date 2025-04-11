@@ -21,7 +21,7 @@ public class DatabaseFixture : IDisposable, IAsyncDisposable
         Context = new LegoContext(options);
     }
 
-    public LegoContext Context { get; set; }
+    public LegoContext Context { get; }
 
     public void Dispose()
     {

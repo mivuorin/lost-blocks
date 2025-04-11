@@ -3,12 +3,16 @@ using LostBlocks.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace LostBlocks.Api.Test;
+namespace LostBlocks.Api.Test.Controllers;
 
-[Collection("Database")]
-public class ThemeControllerTest(DatabaseFixture fixture)
+public class ThemeControllerTest : DatabaseTest
 {
-    private readonly ThemeController controller = new(fixture.Context);
+    private readonly ThemeController controller;
+
+    public ThemeControllerTest(DatabaseFixture fixture) : base(fixture)
+    {
+        controller = new ThemeController(Context);
+    }
 
     [Fact]
     public async Task Get_returns_all_themes()
@@ -21,7 +25,7 @@ public class ThemeControllerTest(DatabaseFixture fixture)
     [Fact]
     public async Task Get_maps_to_theme()
     {
-        LegoTheme theme = fixture.Context.Themes.First();
+        LegoTheme theme = Context.Themes.First();
 
         var themes = await controller.Get();
 
@@ -36,8 +40,8 @@ public class ThemeControllerTest(DatabaseFixture fixture)
     {
         // TODO Set count should be total of childs
         
-        LegoTheme expectedTheme = fixture.Context.Themes.First(t => t.ParentId == null);
-        var expectedCount = fixture.Context.LegoSets.Count(s => s.ThemeId == expectedTheme.Id);
+        LegoTheme expectedTheme = Context.Themes.First(t => t.ParentId == null);
+        var expectedCount = Context.LegoSets.Count(s => s.ThemeId == expectedTheme.Id);
 
         var themes = await controller.Get();
 
@@ -52,7 +56,7 @@ public class ThemeControllerTest(DatabaseFixture fixture)
     {
         // TODO Test is easier to implement when test data set is know.
         
-        LegoTheme root = fixture.Context.Themes
+        LegoTheme root = Context.Themes
             .Include(t => t.Childs)
             .First(t => t.Parent == null && t.Childs.Any());
         

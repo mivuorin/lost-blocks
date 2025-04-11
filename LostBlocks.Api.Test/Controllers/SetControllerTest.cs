@@ -3,20 +3,24 @@ using LostBlocks.Api.Controllers;
 using LostBlocks.Api.Models;
 using Xunit;
 
-namespace LostBlocks.Api.Test;
+namespace LostBlocks.Api.Test.Controllers;
 
-[Collection("Database")]
-public class SetControllerTest(DatabaseFixture fixture)
+public class SetControllerTest : DatabaseTest
 {
-    private readonly SetController controller = new(fixture.Context);
+    private readonly SetController controller;
+
+    public SetControllerTest(DatabaseFixture fixture) : base(fixture)
+    {
+        controller = new SetController(Context);
+    }
 
     [Fact]
     public async Task Return_all_sets_by_theme()
     {
         // TODO Use proper test data
-        LegoTheme theme = fixture.Context.Themes.First();
+        LegoTheme theme = Context.Themes.First();
 
-        var expected = fixture.Context.LegoSets
+        var expected = Context.LegoSets
             .Where(s => s.ThemeId == theme.Id)
             .ToLookup(s => s.SetNum);
 
@@ -28,8 +32,8 @@ public class SetControllerTest(DatabaseFixture fixture)
     [Fact]
     public async Task Maps_to_SetDto()
     {
-        LegoTheme theme = fixture.Context.Themes.First();
-        LegoSet set = fixture.Context.LegoSets.First(s => s.ThemeId == theme.Id);
+        LegoTheme theme = Context.Themes.First();
+        LegoSet set = Context.LegoSets.First(s => s.ThemeId == theme.Id);
 
         var expected = new SetDto
         {
