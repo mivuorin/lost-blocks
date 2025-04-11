@@ -1,4 +1,5 @@
-﻿using LostBlocks.Api.Controllers;
+﻿using FluentAssertions;
+using LostBlocks.Api.Controllers;
 using LostBlocks.Api.Models;
 using Xunit;
 
@@ -21,23 +22,27 @@ public class SetControllerTest(DatabaseFixture fixture)
 
         var actual = await controller.Get(theme.Id);
 
-        Assert.Contains(actual, dto => expected.Contains(dto.SetNum));
+        actual.Should().Contain(dto => expected.Contains(dto.SetNum));
     }
 
     [Fact]
     public async Task Maps_to_SetDto()
     {
         LegoTheme theme = fixture.Context.Themes.First();
+        LegoSet set = fixture.Context.LegoSets.First(s => s.ThemeId == theme.Id);
 
-        LegoSet expected = fixture.Context.LegoSets.First(s => s.ThemeId == theme.Id);
+        var expected = new SetDto
+        {
+            SetNum = set.SetNum,
+            Name = set.Name,
+            Year = set.Year,
+            NumParts = set.NumParts
+        };
 
         var result = await controller.Get(theme.Id);
 
-        SetDto actual = result.Single(dto => dto.SetNum == expected.SetNum);
+        SetDto actual = result.Single(dto => dto.SetNum == set.SetNum);
 
-        Assert.Equal(expected.SetNum, actual.SetNum);
-        Assert.Equal(expected.Name, actual.Name);
-        Assert.Equal(expected.Year, actual.Year);
-        Assert.Equal(expected.NumParts, actual.NumParts);
+        actual.Should().Be(expected);
     }
 }

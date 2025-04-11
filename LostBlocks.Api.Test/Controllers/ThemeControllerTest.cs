@@ -21,14 +21,14 @@ public class ThemeControllerTest(DatabaseFixture fixture)
     [Fact]
     public async Task Get_maps_to_theme()
     {
-        LegoTheme expected = fixture.Context.Themes.First();
+        LegoTheme theme = fixture.Context.Themes.First();
 
         var themes = await controller.Get();
 
         ThemeDto actual = themes.First();
 
-        Assert.Equal(expected.Id, actual.Id);
-        Assert.Equal(expected.Name, actual.Name);
+        Assert.Equal(theme.Id, actual.Id);
+        Assert.Equal(theme.Name, actual.Name);
     }
 
     [Fact]
