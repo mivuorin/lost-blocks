@@ -18,12 +18,13 @@ public class ThemeController(LegoContext context)
             .ToListAsync();
 
         var lookup = themes.ToLookup(t => t.ParentId);
-        
-        foreach (var legoTheme in themes)
+
+        foreach (LegoTheme legoTheme in themes)
         {
-            legoTheme.Childs = lookup[legoTheme.Id].ToList();
+            var children = lookup[legoTheme.Id];
+            legoTheme.Childs = children.ToList();
         }
-        
+
         var root = themes
             .Where(t => t.ParentId == null)
             .Select(MapTheme);
@@ -37,8 +38,19 @@ public class ThemeController(LegoContext context)
         {
             Id = theme.Id,
             Name = theme.Name,
-            Sets = theme.Sets.Count,
+            Sets = theme.Sets.Count + CountChildSets(theme.Childs),
             Themes = theme.Childs.Select(MapTheme).ToArray()
         };
+    }
+
+    private static int CountChildSets(IEnumerable<LegoTheme> children)
+    {
+        int count = 0;
+        foreach (LegoTheme child in children)
+        {
+            count += child.Sets.Count + CountChildSets(child.Childs);
+        }
+
+        return count; 
     }
 }

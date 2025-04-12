@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using LostBlocks.Api.Models;
+using LostBlocks.Api.Test.AutoFixture;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -7,50 +8,44 @@ namespace LostBlocks.Api.Test.Database;
 
 public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
 {
-    [Fact]
-    public void Insert_with_generated_id()
+    [Theory]
+    [LegoAutoData]
+    public void Insert_with_generated_id(LegoTheme theme)
     {
-        var theme = new LegoTheme
-        {
-            ParentId = null,
-            Name = "Test Theme"
-        };
-
         Context.Themes.Add(theme);
         Context.SaveChanges();
 
         theme.Id.Should().NotBe(0);
 
-        var actual = Context.Themes.Find(theme.Id);
+        LegoTheme? actual = Context.Themes.Find(theme.Id);
         actual.Should().NotBe(null);
     }
 
-    [Fact]
-    public void Theme_has_many_child_themes()
+    [Theory]
+    [LegoAutoData]
+    public void Theme_has_many_child_themes(LegoTheme child, LegoTheme parent)
     {
-        LegoTheme child = fixture.Context
-            .Themes
-            .Include(t => t.Parent)
-            .First(t => t.ParentId != null);
+        parent.Childs.Add(child);
 
-        LegoTheme parent = fixture.Context
-            .Themes
+        Context.Themes.Add(parent);
+        Context.SaveChanges();
+
+        LegoTheme actual = Context.Themes
             .Include(t => t.Childs)
-            .Single(t => t.Id == child.ParentId);
+            .Single(t => t.Id == parent.Id);
 
-        Assert.Contains(child, parent.Childs);
-        Assert.Equal(child.Parent, parent);
+        actual.Childs.Should().Contain(child);
+        child.Parent.Should().Be(actual);
     }
 
     [Fact]
     public void Theme_has_many_sets()
     {
-        LegoSet set = fixture.Context
-            .LegoSets
+        LegoSet set = Context.LegoSets
             .Include(s => s.Theme)
             .First();
 
-        LegoTheme theme = fixture.Context
+        LegoTheme theme = Context
             .Themes
             .Include(t => t.Sets)
             .Single(t => t.Id == set.ThemeId);

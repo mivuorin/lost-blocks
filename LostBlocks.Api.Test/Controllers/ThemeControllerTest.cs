@@ -1,6 +1,7 @@
-﻿using LostBlocks.Api.Controllers;
+﻿using FluentAssertions;
+using LostBlocks.Api.Controllers;
 using LostBlocks.Api.Models;
-using Microsoft.EntityFrameworkCore;
+using LostBlocks.Api.Test.AutoFixture;
 using Xunit;
 
 namespace LostBlocks.Api.Test.Controllers;
@@ -14,57 +15,56 @@ public class ThemeControllerTest : DatabaseTest
         controller = new ThemeController(Context);
     }
 
-    [Fact]
-    public async Task Get_returns_all_themes()
+    [Theory]
+    [LegoAutoData]
+    public async Task Get_returns_themes(LegoTheme expected)
     {
+        Context.Themes.Add(expected);
+        Context.SaveChanges();
+
         var themes = await controller.Get();
 
-        Assert.NotEmpty(themes);
+        ThemeDto actual = themes.Single(t => t.Id == expected.Id);
+
+        Assert.Equal(expected.Id, actual.Id);
+        Assert.Equal(expected.Name, actual.Name);
     }
 
-    [Fact]
-    public async Task Get_maps_to_theme()
+    [Theory]
+    [LegoAutoData]
+    public async Task Get_return_theme_hierarchy_and_set_count_in_theme(
+        LegoTheme root,
+        LegoTheme middle,
+        LegoTheme leaf,
+        LegoSet set1,
+        LegoSet set2,
+        LegoSet set3
+    )
     {
-        LegoTheme theme = Context.Themes.First();
+        root.Sets.Add(set1);
+        leaf.Sets.Add(set2);
+        leaf.Sets.Add(set3);
+
+        middle.Childs.Add(leaf);
+        root.Childs.Add(middle);
+
+        Context.Themes.Add(root);
+        Context.SaveChanges();
 
         var themes = await controller.Get();
 
-        ThemeDto actual = themes.First();
+        ThemeDto actualRoot = themes.Single(t => t.Id == root.Id);
+        actualRoot.Id.Should().Be(root.Id);
+        actualRoot.Sets.Should().Be(3);
 
-        Assert.Equal(theme.Id, actual.Id);
-        Assert.Equal(theme.Name, actual.Name);
-    }
+        ThemeDto actualMiddle = actualRoot.Themes.Single();
+        actualMiddle.Id.Should().Be(middle.Id);
+        actualMiddle.Sets.Should().Be(2);
 
-    [Fact]
-    public async Task Get_should_count_sets_in_theme()
-    {
-        // TODO Set count should be total of childs
-        
-        LegoTheme expectedTheme = Context.Themes.First(t => t.ParentId == null);
-        var expectedCount = Context.LegoSets.Count(s => s.ThemeId == expectedTheme.Id);
+        ThemeDto actualLeaf = actualMiddle.Themes.Single();
+        actualLeaf.Id.Should().Be(leaf.Id);
+        actualLeaf.Sets.Should().Be(2);
 
-        var themes = await controller.Get();
-
-        ThemeDto actual = themes.Single(t => t.Id == expectedTheme.Id);
-
-        Assert.Equal(expectedTheme.Name, actual.Name);
-        Assert.Equal(expectedCount, actual.Sets);
-    }
-
-    [Fact]
-    public async Task Get_should_build_theme_hierarchy()
-    {
-        // TODO Test is easier to implement when test data set is know.
-        
-        LegoTheme root = Context.Themes
-            .Include(t => t.Childs)
-            .First(t => t.Parent == null && t.Childs.Any());
-        
-        var themes = await controller.Get();
-
-        ThemeDto actual = themes.Single(t => t.Id == root.Id);
-
-        Assert.Equal(actual.Id, root.Id);
-        Assert.Equal(root.Childs.Count, actual.Themes.Length);
+        actualLeaf.Themes.Should().BeEmpty();
     }
 }
