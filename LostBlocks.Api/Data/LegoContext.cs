@@ -1,5 +1,6 @@
 ﻿using LostBlocks.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LostBlocks.Api.Data;
 
@@ -24,7 +25,7 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseSerialColumns();
-        
+
         modelBuilder.Entity<LegoColor>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("lego_colors_pkey");
@@ -34,9 +35,10 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.Id)
                 .HasColumnName("id")
                 .HasDefaultValueSql("nextval('lego_colors_id_seq')");
-            entity.Property(e => e.IsTrans)
+            entity.Property(e => e.IsTransparent)
                 .HasMaxLength(1)
-                .HasColumnName("is_trans");
+                .HasColumnName("is_trans")
+                .HasConversion<CharToBoolConverter>();
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -168,3 +170,5 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
         modelBuilder.HasSequence<int>("lego_themes_id_seq");
     }
 }
+
+file class CharToBoolConverter() : ValueConverter<bool, char>(b => b == true ? 't' : 'f', c => c == 't');

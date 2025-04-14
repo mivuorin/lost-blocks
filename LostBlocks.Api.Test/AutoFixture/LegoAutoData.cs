@@ -15,7 +15,8 @@ public class LegoAutoData() : AutoDataAttribute(FixtureFactory)
         fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         fixture
             .Customize(new LegoThemeCustomization())
-            .Customize(new LegoSetCustomization());
+            .Customize(new LegoSetCustomization())
+            .Customize(new LegoColorCustomization());
         return fixture;
     }
 }
