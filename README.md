@@ -84,7 +84,24 @@ This makes sure that tests there is no persistent data
 
 ### Shared database connection in tests
 
-All tests share single instance of Entity Framework Context which manages connections to database. This reduces overhead for single test to open database connection.
+Creating database connections can cause overhead when run once per tests, so use either shared connection between
+tests or database connection pooling.
+
+Entity Framework already uses connection pooling on lower level, so it does not require extra configuration.
+
+### Do not share instance of DbContext between tests
+
+Entity Framework DbContext has internal state (change tracker, identity map...) which should not be shared between
+tests.
+
+For example adding single entity to database which violates any constraint will break all tests if context is shared
+between tests.
+
+Tests uses PooledDbContextFactory to instantiate DbContext, which automatically reuses mapping configuration in setup
+and resets context state
+when context is disposed. This makes context creation faster.
+
+https://learn.microsoft.com/en-us/ef/core/performance/advanced-performance-topics?tabs=without-di%2Cexpression-api-with-constant#dbcontext-pooling
 
 ## Scaffolding database
 

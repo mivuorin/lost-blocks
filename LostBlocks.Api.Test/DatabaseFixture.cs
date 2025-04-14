@@ -1,10 +1,11 @@
 ﻿using LostBlocks.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
 namespace LostBlocks.Api.Test;
 
-public class DatabaseFixture : IDisposable, IAsyncDisposable
+public class DatabaseFixture
 {
     public DatabaseFixture()
     {
@@ -18,21 +19,9 @@ public class DatabaseFixture : IDisposable, IAsyncDisposable
             .UseNpgsql(config.GetConnectionString("lego"))
             .EnableDetailedErrors() // Enable detailed errors for tests
             .Options;
-        
-        Context = new LegoContext(options);
+
+        Factory = new PooledDbContextFactory<LegoContext>(options);
     }
 
-    public LegoContext Context { get; }
-
-    public void Dispose()
-    {
-        Context.Dispose();
-        GC.SuppressFinalize(this);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await Context.DisposeAsync();
-        GC.SuppressFinalize(this);
-    }
+    public PooledDbContextFactory<LegoContext> Factory { get; }
 }

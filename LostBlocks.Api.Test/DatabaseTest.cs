@@ -5,18 +5,29 @@ using Xunit;
 namespace LostBlocks.Api.Test;
 
 [Collection("Database")]
-public class DatabaseTest(DatabaseFixture fixture) : IDisposable
+public class DatabaseTest : IDisposable, IAsyncDisposable
 {
-    private readonly IDbContextTransaction transaction = fixture.Context.Database.BeginTransaction();
+    private readonly IDbContextTransaction transaction;
 
-    /// <summary>
-    ///     Shorthand accessor property for fixture.Context
-    /// </summary>
-    protected LegoContext Context => fixture.Context;
+    public DatabaseTest(DatabaseFixture fixture)
+    {
+        Context = fixture.Factory.CreateDbContext();
+        transaction = Context.Database.BeginTransaction();
+    }
+
+    protected LegoContext Context { get; }
 
     public void Dispose()
     {
         transaction.Rollback();
         transaction.Dispose();
+        Context.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await transaction.RollbackAsync();
+        await transaction.DisposeAsync();
+        await Context.DisposeAsync();
     }
 }
