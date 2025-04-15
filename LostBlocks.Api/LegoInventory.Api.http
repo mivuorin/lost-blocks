@@ -1,10 +1,5 @@
 @root = https://localhost:7128
 
-GET {{root}}/info
-Accept: application/json
-
-###
-
 GET {{root}}/theme
 Accept: application/json
 
