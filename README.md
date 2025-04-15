@@ -119,8 +119,21 @@ and run with docker-compose [compose.yaml](compose.yaml)
 
 ## Lego sample database license (lego.sql)
 
+Lego set can consist of one or more Inventories and is identified by set number (set_num eg. 8088-1)
+
+There might be multiple Inventories if the Parts in the Set were changed during it's production period, or perhaps to
+cater for different geographic regions.
+
+Each Inventory can contain Parts and/or Sets. Most Inventories contain just Parts, but some consist solely of Sets (e.g.
+5004559-1) or a combination of Parts and Sets (e.g. 9509-1).
+
 Lego test database (lego.sql) is from
 here: https://github.com/neondatabase-labs/postgres-sample-dbs?tab=readme-ov-file#lego-database
 Which original source is here: https://www.kaggle.com/datasets/rtatman/lego-database
 and original license https://creativecommons.org/publicdomain/zero/1.0/
 
+Original source of the data is from Rebrickable CSV datasets which can be found from here
+https://rebrickable.com/downloads/
+
+Rebrickable does only provide CSV data sets and not database schema. Updated database schema diagram can be found here.
+https://rebrickable.com/help/lego-database/
