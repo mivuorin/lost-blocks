@@ -7,7 +7,7 @@ namespace LostBlocks.Api.Controllers;
 
 [ApiController]
 [Route("theme")]
-public class ThemeController(LegoContext context)
+public class ThemeController(LegoContext context) : ControllerBase
 {
     public async Task<IEnumerable<ThemeDto>> Get()
     {

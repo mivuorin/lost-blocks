@@ -6,10 +6,10 @@ namespace LostBlocks.Api.Controllers;
 
 [ApiController]
 [Route("set")]
-public class SetController(LegoContext context)
+public class SetController(LegoContext context) : ControllerBase
 {
-    [HttpGet("{themeId}")]
-    public async Task<IEnumerable<LegoSetDto>> Get(int themeId)
+    [HttpGet]
+    public async Task<IEnumerable<LegoSetDto>> Query([FromQuery] int themeId)
     {
         return await context.LegoSets
             .Where(s => s.ThemeId == themeId)
@@ -21,5 +21,26 @@ public class SetController(LegoContext context)
                 NumParts = s.NumParts
             })
             .ToArrayAsync();
+    }
+
+    [HttpGet("{setNum}")]
+    public async Task<ActionResult<LegoSetDetailsDto>> Get(string setNum)
+    {
+        LegoSetDetailsDto? found = await context.LegoSets
+            .Where(s => s.SetNum == setNum)
+            .Select(s => new LegoSetDetailsDto
+            {
+                Name = s.Name,
+                Year = s.Year,
+                NumParts = s.NumParts
+            })
+            .SingleOrDefaultAsync();
+
+        if (found is null)
+        {
+            return NotFound();
+        }
+
+        return found;
     }
 }

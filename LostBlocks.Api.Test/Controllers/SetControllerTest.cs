@@ -2,6 +2,7 @@
 using LostBlocks.Api.Controllers;
 using LostBlocks.Api.Models;
 using LostBlocks.Api.Test.AutoFixture;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace LostBlocks.Api.Test.Controllers;
@@ -17,7 +18,7 @@ public class SetControllerTest : DatabaseTest
 
     [Theory]
     [LegoAutoData]
-    public async Task Return_all_sets_by_theme(LegoTheme theme, LegoSet set, LegoSet other)
+    public async Task Query_by_theme(LegoTheme theme, LegoSet set, LegoSet other)
     {
         set.Theme = theme;
         other.Theme = null;
@@ -29,7 +30,7 @@ public class SetControllerTest : DatabaseTest
             .Where(s => s.ThemeId == theme.Id)
             .ToLookup(s => s.SetNum);
 
-        var actual = await controller.Get(theme.Id);
+        var actual = await controller.Query(theme.Id);
 
         actual.Should().HaveCount(1)
             .And.ContainSingle(s => s.SetNum == set.SetNum)
@@ -37,14 +38,14 @@ public class SetControllerTest : DatabaseTest
     }
 
     [Theory, LegoAutoData]
-    public async Task Maps_to_SetDto(LegoTheme theme, LegoSet set)
+    public async Task Query_maps_to_SetDto(LegoTheme theme, LegoSet set)
     {
         set.Theme = theme;
 
         Context.LegoSets.Add(set);
         Context.SaveChanges();
 
-        var result = await controller.Get(theme.Id);
+        var result = await controller.Query(theme.Id);
 
         LegoSetDto actual = result.Single(dto => dto.SetNum == set.SetNum);
 
@@ -57,5 +58,30 @@ public class SetControllerTest : DatabaseTest
         };
         
         actual.Should().Be(expected);
+    }
+
+    [Theory, LegoAutoData]
+    public async Task Get_by_SetNum(LegoSet set)
+    {
+        Context.LegoSets.Add(set);
+        Context.SaveChanges();
+
+        var result = await controller.Get(set.SetNum);
+
+        var expected = new LegoSetDetailsDto
+        {
+            Name = set.Name,
+            Year = set.Year,
+            NumParts = set.NumParts
+        };
+
+        result.Value.Should().Be(expected);
+    }
+
+    [Fact]
+    public async Task Get_by_SetNum_404()
+    {
+        var result = await controller.Get("does-not-exist");
+        result.Result.Should().BeOfType<NotFoundResult>();
     }
 }
