@@ -24,6 +24,10 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // TODO Scaffolding did not generate proper required columns, add IsRequired when needed.
+        // TODO Database is missing proper foreign key, add foreign keys when needed.
+        // TODO Cascade delete rules
+
         modelBuilder.UseSerialColumns();
 
         modelBuilder.Entity<LegoColor>(entity =>
@@ -60,13 +64,23 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasMaxLength(255)
                 .HasColumnName("set_num");
             entity.Property(e => e.Version).HasColumnName("version");
+
+            entity.HasOne<LegoSet>(e => e.Set)
+                .WithMany(e => e.Inventories)
+                .HasForeignKey(e => e.SetNum)
+                .HasPrincipalKey(e => e.SetNum);
+
+            entity.HasMany<LegoInventoryPart>(e => e.InventoryParts)
+                .WithOne(e => e.Inventory)
+                .HasForeignKey(e => e.InventoryId)
+                .HasPrincipalKey(e => e.Id);
         });
 
         modelBuilder.Entity<LegoInventoryPart>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("lego_inventory_parts");
+            entity.ToTable("lego_inventory_parts");
+
+            entity.HasKey(e => new { e.InventoryId, e.ColorId, e.PartNum, e.IsSpare });
 
             entity.Property(e => e.ColorId).HasColumnName("color_id");
             entity.Property(e => e.InventoryId).HasColumnName("inventory_id");
@@ -75,19 +89,45 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasMaxLength(255)
                 .HasColumnName("part_num");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.HasOne<LegoInventory>(e => e.Inventory)
+                .WithMany(e => e.InventoryParts)
+                .HasForeignKey(e => e.InventoryId)
+                .HasPrincipalKey(e => e.Id);
+
+            entity.HasOne<LegoColor>(e => e.Color)
+                .WithMany()
+                .HasForeignKey(e => e.ColorId)
+                .HasPrincipalKey(e => e.Id);
+
+            entity.HasOne<LegoPart>(e => e.Part)
+                .WithMany(p => p.InventoryParts)
+                .HasForeignKey(e => e.PartNum)
+                .HasPrincipalKey(e => e.PartNum);
         });
 
         modelBuilder.Entity<LegoInventorySet>(entity =>
         {
+            entity.ToTable("lego_inventory_sets");
+
             entity
-                .HasNoKey()
-                .ToTable("lego_inventory_sets");
+                .HasKey(e => new { e.InventoryId, e.SetNum });
 
             entity.Property(e => e.InventoryId).HasColumnName("inventory_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.SetNum)
                 .HasMaxLength(255)
                 .HasColumnName("set_num");
+
+            entity.HasOne<LegoInventory>(e => e.Inventory)
+                .WithMany()
+                .HasForeignKey(e => e.InventoryId)
+                .HasPrincipalKey(e => e.Id);
+            
+            entity.HasOne<LegoSet>(e => e.Set)
+                .WithMany()
+                .HasForeignKey(e => e.SetNum)
+                .HasPrincipalKey(e => e.SetNum);
         });
 
         modelBuilder.Entity<LegoPart>(entity =>
@@ -101,6 +141,17 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasColumnName("part_num");
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.PartCatId).HasColumnName("part_cat_id");
+
+            entity
+                .HasOne<LegoPartCategory>(e => e.Category)
+                .WithMany(e => e.Parts)
+                .HasForeignKey(e => e.PartCatId)
+                .HasPrincipalKey(e => e.Id);
+
+            entity.HasMany<LegoInventoryPart>(e => e.InventoryParts)
+                .WithOne(p => p.Part)
+                .HasForeignKey(e => e.PartNum)
+                .HasPrincipalKey(e => e.PartNum);
         });
 
         modelBuilder.Entity<LegoPartCategory>(entity =>
@@ -115,6 +166,11 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
+
+            entity.HasMany<LegoPart>(e => e.Parts)
+                .WithOne(e => e.Category)
+                .HasForeignKey(e => e.PartCatId)
+                .HasPrincipalKey(e => e.Id);
         });
 
         modelBuilder.Entity<LegoSet>(entity =>
@@ -135,11 +191,15 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.ThemeId).HasColumnName("theme_id");
             entity.Property(e => e.Year).HasColumnName("year");
 
-            entity
-                .HasOne(e => e.Theme)
+            entity.HasOne(e => e.Theme)
                 .WithMany(e => e.Sets)
                 .HasForeignKey(e => e.ThemeId)
                 .HasPrincipalKey(e => e.Id);
+
+            entity.HasMany<LegoInventory>(e => e.Inventories)
+                .WithOne(e => e.Set)
+                .HasForeignKey(e => e.SetNum)
+                .HasPrincipalKey(e => e.SetNum);
         });
 
         modelBuilder.Entity<LegoTheme>(entity =>

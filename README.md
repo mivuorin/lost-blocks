@@ -137,3 +137,23 @@ https://rebrickable.com/downloads/
 
 Rebrickable does only provide CSV data sets and not database schema. Updated database schema diagram can be found here.
 https://rebrickable.com/help/lego-database/
+
+### Problems in sample database
+
+#### Sequences are not set to correct values after seeding data
+
+Some tables use sequences for primary keys which are not set to correct starting values after seeding data.
+This causes sequences to generate conflicting primary key values on inserts.
+
+This is fixed in [lego-sequence-fix.sql](lego-sequence-fix.sql).
+
+#### Foreign key constraints are missing
+
+Most of the tables are missing foreign key constraints.
+
+### Delete cascades are also missing because of missing foreign keys
+
+Not having proper delete rules configured for relationships makes it hard to do proper deletes
+and can lead to accidental data loss when deleting graphs.
+
+Developers should take be extra careful when working with Entity Framework because, Entity Framework uses cascading delete behaviour by default.

@@ -10,6 +10,8 @@ internal class LegoSetCustomization : ICustomization
         fixture.Customize<LegoSet>(composer =>
             composer
                 .Without(s => s.Theme)
-                .Without(s => s.ThemeId));
+                .Without(s => s.ThemeId)
+                .Without(s => s.Inventories)
+        );
     }
 }

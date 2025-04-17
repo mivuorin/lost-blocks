@@ -16,7 +16,12 @@ public class LegoAutoData() : AutoDataAttribute(FixtureFactory)
         fixture
             .Customize(new LegoThemeCustomization())
             .Customize(new LegoSetCustomization())
-            .Customize(new LegoColorCustomization());
+            .Customize(new LegoColorCustomization())
+            .Customize(new LegoInventoryCustomization())
+            .Customize(new LegoInventoryPartCustomization())
+            .Customize(new LegoPartCustomization())
+            .Customize(new LegoPartCategoryCustomization())
+            .Customize(new LegoInventorySetCustomization());
         return fixture;
     }
 }

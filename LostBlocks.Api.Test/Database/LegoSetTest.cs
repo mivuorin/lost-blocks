@@ -23,7 +23,7 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
     }
 
     [Theory, LegoAutoData]
-    public void Has_single_Theme(LegoSet set, LegoTheme theme)
+    public void Has_one_Theme(LegoSet set, LegoTheme theme)
     {
         set.Theme = theme;
 
@@ -36,5 +36,23 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
             .Single(t => t.Id == theme.Id);
 
         actual.Sets.Should().Contain(set);
+    }
+
+    [Theory, LegoAutoData]
+    public void Has_many_Inventories(LegoSet set, LegoInventory inventory1, LegoInventory inventory2)
+    {
+        set.Inventories.Add(inventory1);
+        set.Inventories.Add(inventory2);
+
+        Context.LegoSets.Add(set);
+        Context.SaveChanges();
+
+        LegoSet actual = Context.LegoSets
+            .Include(s => s.Inventories)
+            .Single(s => s.SetNum == set.SetNum);
+
+        actual.Inventories.Should().HaveCount(2)
+            .And.Contain(inventory1)
+            .And.Contain(inventory2);
     }
 }

@@ -21,9 +21,24 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         actual.Should().NotBe(null);
     }
 
+    [Theory, LegoAutoData]
+    public void Theme_has_one_parent_Theme(LegoTheme child, LegoTheme parent)
+    {
+        child.Parent = parent;
+
+        Context.Themes.Add(child);
+        Context.SaveChanges();
+        
+        LegoTheme actual = Context.Themes
+            .Include(t => t.Parent)
+            .Single(t => t.Id == child.Id);
+
+        actual.Parent.Should().Be(parent);
+    }
+    
     [Theory]
     [LegoAutoData]
-    public void Theme_has_many_child_themes(LegoTheme child, LegoTheme parent)
+    public void Theme_has_many_child_Themes(LegoTheme child, LegoTheme parent)
     {
         parent.Childs.Add(child);
 
@@ -35,7 +50,6 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
             .Single(t => t.Id == parent.Id);
 
         actual.Childs.Should().Contain(child);
-        child.Parent.Should().Be(actual);
     }
 
     [Fact]
