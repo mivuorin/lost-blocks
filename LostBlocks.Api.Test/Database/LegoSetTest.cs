@@ -12,11 +12,11 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
     [LegoAutoData]
     public void Insert(LegoSet set)
     {
-        Context.LegoSets.Add(set);
+        Context.Sets.Add(set);
         Context.SaveChanges();
 
         var actual = Context
-            .LegoSets
+            .Sets
             .Find(set.SetNum);
 
         actual.Should().NotBeNull();
@@ -27,7 +27,7 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
     {
         set.Theme = theme;
 
-        Context.LegoSets.Add(set);
+        Context.Sets.Add(set);
         Context.SaveChanges();
 
         var actual = Context
@@ -44,10 +44,10 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         set.Inventories.Add(inventory1);
         set.Inventories.Add(inventory2);
 
-        Context.LegoSets.Add(set);
+        Context.Sets.Add(set);
         Context.SaveChanges();
 
-        LegoSet actual = Context.LegoSets
+        LegoSet actual = Context.Sets
             .Include(s => s.Inventories)
             .Single(s => s.SetNum == set.SetNum);
 

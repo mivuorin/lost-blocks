@@ -23,10 +23,10 @@ public class SetControllerTest : DatabaseTest
         set.Theme = theme;
         other.Theme = null;
 
-        Context.LegoSets.AddRange(set, other);
+        Context.Sets.AddRange(set, other);
         Context.SaveChanges();
 
-        var expected = Context.LegoSets
+        var expected = Context.Sets
             .Where(s => s.ThemeId == theme.Id)
             .ToLookup(s => s.SetNum);
 
@@ -42,7 +42,7 @@ public class SetControllerTest : DatabaseTest
     {
         set.Theme = theme;
 
-        Context.LegoSets.Add(set);
+        Context.Sets.Add(set);
         Context.SaveChanges();
 
         var result = await controller.Query(theme.Id);
@@ -63,7 +63,7 @@ public class SetControllerTest : DatabaseTest
     [Theory, LegoAutoData]
     public async Task Get_by_SetNum(LegoSet set)
     {
-        Context.LegoSets.Add(set);
+        Context.Sets.Add(set);
         Context.SaveChanges();
 
         var result = await controller.Get(set.SetNum);

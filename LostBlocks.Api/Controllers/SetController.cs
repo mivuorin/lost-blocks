@@ -11,7 +11,7 @@ public class SetController(LegoContext context) : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<LegoSetDto>> Query([FromQuery] int themeId)
     {
-        return await context.LegoSets
+        return await context.Sets
             .Where(s => s.ThemeId == themeId)
             .Select(s => new LegoSetDto
             {
@@ -26,7 +26,7 @@ public class SetController(LegoContext context) : ControllerBase
     [HttpGet("{setNum}")]
     public async Task<ActionResult<LegoSetDetailsDto>> Get(string setNum)
     {
-        LegoSetDetailsDto? found = await context.LegoSets
+        LegoSetDetailsDto? found = await context.Sets
             .Where(s => s.SetNum == setNum)
             .Select(s => new LegoSetDetailsDto
             {

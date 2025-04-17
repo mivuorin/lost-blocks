@@ -18,7 +18,7 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
     public virtual DbSet<LegoPartCategory> PartCategories { get; set; }
 
-    public virtual DbSet<LegoSet> LegoSets { get; set; }
+    public virtual DbSet<LegoSet> Sets { get; set; }
 
     public virtual DbSet<LegoTheme> Themes { get; set; }
 

@@ -55,7 +55,7 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
     [Fact]
     public void Theme_has_many_sets()
     {
-        LegoSet set = Context.LegoSets
+        LegoSet set = Context.Sets
             .Include(s => s.Theme)
             .First();
 
