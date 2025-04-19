@@ -12,3 +12,8 @@ Accept: application/json
 
 GET {{root}}/set/42005-1
 Accept: application/json
+
+###
+
+GET {{root}}/inventory/9435
+Accept: application/json
