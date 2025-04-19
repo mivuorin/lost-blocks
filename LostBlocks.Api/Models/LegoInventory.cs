@@ -7,4 +7,5 @@ public class LegoInventory
     public string SetNum { get; set; } = null!;
     public ICollection<LegoInventoryPart> InventoryParts { get; set; } = [];
     public required LegoSet Set { get; set; }
+    public ICollection<LegoInventorySet> InventorySets { get; set; } = [];
 }

@@ -74,6 +74,11 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .WithOne(e => e.Inventory)
                 .HasForeignKey(e => e.InventoryId)
                 .HasPrincipalKey(e => e.Id);
+            
+            entity.HasMany<LegoInventorySet>(e => e.InventorySets)
+                .WithOne(e => e.Inventory)
+                .HasForeignKey(e => e.InventoryId)
+                .HasPrincipalKey(e => e.Id);
         });
 
         modelBuilder.Entity<LegoInventoryPart>(entity =>
@@ -96,7 +101,7 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasPrincipalKey(e => e.Id);
 
             entity.HasOne<LegoColor>(e => e.Color)
-                .WithMany()
+                .WithMany() // TODO Add relation
                 .HasForeignKey(e => e.ColorId)
                 .HasPrincipalKey(e => e.Id);
 
@@ -120,12 +125,12 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasColumnName("set_num");
 
             entity.HasOne<LegoInventory>(e => e.Inventory)
-                .WithMany()
+                .WithMany(e => e.InventorySets)
                 .HasForeignKey(e => e.InventoryId)
                 .HasPrincipalKey(e => e.Id);
             
             entity.HasOne<LegoSet>(e => e.Set)
-                .WithMany()
+                .WithMany(e => e.InventorySets)
                 .HasForeignKey(e => e.SetNum)
                 .HasPrincipalKey(e => e.SetNum);
         });
@@ -191,12 +196,17 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity.Property(e => e.ThemeId).HasColumnName("theme_id");
             entity.Property(e => e.Year).HasColumnName("year");
 
-            entity.HasOne(e => e.Theme)
+            entity.HasOne<LegoTheme>(e => e.Theme)
                 .WithMany(e => e.Sets)
                 .HasForeignKey(e => e.ThemeId)
                 .HasPrincipalKey(e => e.Id);
 
             entity.HasMany<LegoInventory>(e => e.Inventories)
+                .WithOne(e => e.Set)
+                .HasForeignKey(e => e.SetNum)
+                .HasPrincipalKey(e => e.SetNum);
+
+            entity.HasMany<LegoInventorySet>(e => e.InventorySets)
                 .WithOne(e => e.Set)
                 .HasForeignKey(e => e.SetNum)
                 .HasPrincipalKey(e => e.SetNum);

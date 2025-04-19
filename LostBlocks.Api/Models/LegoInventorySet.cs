@@ -3,8 +3,8 @@
 public class LegoInventorySet
 {
     public int InventoryId { get; set; }
-    public string SetNum { get; set; } = null!;
+    public string SetNum { get; set; }
     public int Quantity { get; set; }
     public required LegoInventory Inventory { get; set; }
-    public LegoSet Set { get; set; }
+    public required LegoSet Set { get; set; }
 }

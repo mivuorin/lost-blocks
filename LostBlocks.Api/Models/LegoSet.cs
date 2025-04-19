@@ -9,4 +9,5 @@ public class LegoSet
     public int? NumParts { get; set; }
     public LegoTheme? Theme { get; set; }
     public ICollection<LegoInventory> Inventories { get; set; } = [];
+    public ICollection<LegoInventorySet> InventorySets { get; set; } = [];
 }

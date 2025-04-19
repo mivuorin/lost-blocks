@@ -13,6 +13,7 @@ internal class LegoInventoryCustomization : ICustomization
                 .Without(i => i.InventoryParts)
                 .Without(i => i.SetNum)
                 .Without(i => i.Set)
+                .Without(i => i.InventorySets)
         );
     }
 }

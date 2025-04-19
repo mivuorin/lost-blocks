@@ -12,6 +12,7 @@ internal class LegoSetCustomization : ICustomization
                 .Without(s => s.Theme)
                 .Without(s => s.ThemeId)
                 .Without(s => s.Inventories)
+                .Without(s => s.InventorySets)
         );
     }
 }
