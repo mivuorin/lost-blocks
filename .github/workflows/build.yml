@@ -1,0 +1,46 @@
+﻿name: Build & Test
+
+on: push
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:17.4-alpine
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_DB: lego
+          POSTGRES_PASSWORD: oBR0257i4tu54bHMakU9hGI2vMCUQyg1
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with: 
+        dotnet-version: 9.0.x
+        cache: true
+        cache-dependency-path: "**/packages.lock.json"
+    - name: Restore
+      run: dotnet restore --locked-mode
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Init database
+      run: |
+        psql -f lego.sql
+        psql -f lego-sequence-fix.sql
+      env:
+        PGHOST: localhost
+        PGDATABASE: lego
+        PGUSER: admin
+        PGPASSWORD: oBR0257i4tu54bHMakU9hGI2vMCUQyg1
+    - name: Test
+      run: dotnet test --no-build
