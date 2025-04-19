@@ -16,9 +16,13 @@ public class SetDetailsControllerTest : DatabaseTest
         controller = new SetDetailsController(Context);
     }
 
-    [Theory, LegoAutoData]
-    public async Task Get_by_SetNum(LegoSet set)
+    [Theory]
+    [LegoAutoData]
+    public async Task Get_by_SetNum(LegoSet set, LegoInventory inventory1, LegoInventory inventory2)
     {
+        set.Inventories.Add(inventory1);
+        set.Inventories.Add(inventory2);
+
         Context.Sets.Add(set);
         Context.SaveChanges();
 
@@ -28,10 +32,23 @@ public class SetDetailsControllerTest : DatabaseTest
         {
             Name = set.Name,
             Year = set.Year,
-            NumParts = set.NumParts
+            NumParts = set.NumParts,
+            Inventories =
+            [
+                new LegoInventoryDto
+                {
+                    Id = inventory1.Id,
+                    Version = inventory1.Version
+                },
+                new LegoInventoryDto
+                {
+                    Id = inventory2.Id,
+                    Version = inventory2.Version
+                }
+            ]
         };
 
-        result.Value.Should().Be(expected);
+        result.Value.Should().BeEquivalentTo(expected);
     }
 
     [Fact]

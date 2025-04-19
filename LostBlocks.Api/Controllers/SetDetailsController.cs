@@ -17,7 +17,14 @@ public class SetDetailsController(LegoContext context) : ControllerBase
             {
                 Name = s.Name,
                 Year = s.Year,
-                NumParts = s.NumParts
+                NumParts = s.NumParts,
+                Inventories = s.Inventories
+                    .Select(i => new LegoInventoryDto
+                    {
+                        Id = i.Id,
+                        Version = i.Version
+                    })
+                    .ToArray()
             })
             .SingleOrDefaultAsync();
 
