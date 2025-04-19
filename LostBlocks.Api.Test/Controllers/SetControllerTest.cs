@@ -2,7 +2,6 @@
 using LostBlocks.Api.Controllers;
 using LostBlocks.Api.Models;
 using LostBlocks.Api.Test.AutoFixture;
-using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace LostBlocks.Api.Test.Controllers;
@@ -37,7 +36,8 @@ public class SetControllerTest : DatabaseTest
             .And.NotContain(s => s.SetNum == other.SetNum);
     }
 
-    [Theory, LegoAutoData]
+    [Theory]
+    [LegoAutoData]
     public async Task Query_maps_to_SetDto(LegoTheme theme, LegoSet set)
     {
         set.Theme = theme;
@@ -56,32 +56,7 @@ public class SetControllerTest : DatabaseTest
             Year = set.Year,
             NumParts = set.NumParts
         };
-        
+
         actual.Should().Be(expected);
-    }
-
-    [Theory, LegoAutoData]
-    public async Task Get_by_SetNum(LegoSet set)
-    {
-        Context.Sets.Add(set);
-        Context.SaveChanges();
-
-        var result = await controller.Get(set.SetNum);
-
-        var expected = new LegoSetDetailsDto
-        {
-            Name = set.Name,
-            Year = set.Year,
-            NumParts = set.NumParts
-        };
-
-        result.Value.Should().Be(expected);
-    }
-
-    [Fact]
-    public async Task Get_by_SetNum_404()
-    {
-        var result = await controller.Get("does-not-exist");
-        result.Result.Should().BeOfType<NotFoundResult>();
     }
 }

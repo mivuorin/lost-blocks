@@ -22,25 +22,4 @@ public class SetController(LegoContext context) : ControllerBase
             })
             .ToArrayAsync();
     }
-
-    [HttpGet("{setNum}")]
-    public async Task<ActionResult<LegoSetDetailsDto>> Get(string setNum)
-    {
-        LegoSetDetailsDto? found = await context.Sets
-            .Where(s => s.SetNum == setNum)
-            .Select(s => new LegoSetDetailsDto
-            {
-                Name = s.Name,
-                Year = s.Year,
-                NumParts = s.NumParts
-            })
-            .SingleOrDefaultAsync();
-
-        if (found is null)
-        {
-            return NotFound();
-        }
-
-        return found;
-    }
 }
