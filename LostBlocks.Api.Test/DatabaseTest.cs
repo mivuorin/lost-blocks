@@ -22,6 +22,7 @@ public class DatabaseTest : IDisposable, IAsyncDisposable
         transaction.Rollback();
         transaction.Dispose();
         Context.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     public async ValueTask DisposeAsync()
@@ -29,5 +30,6 @@ public class DatabaseTest : IDisposable, IAsyncDisposable
         await transaction.RollbackAsync();
         await transaction.DisposeAsync();
         await Context.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }
