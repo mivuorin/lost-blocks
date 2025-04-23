@@ -13,26 +13,30 @@ public class InventoryController(LegoContext context) : ControllerBase
     [HttpGet("{inventoryId:int}")]
     public async Task<ActionResult<InventoryDetailsDto>> Get(int inventoryId)
     {
-        InventoryDetailsDto? found = await context.Inventories
+        InventoryDetailsDto? found = await context
+            .Inventories
             .Where(i => i.Id == inventoryId)
             .Select(i => new InventoryDetailsDto
             {
                 Id = i.Id,
                 SetNum = i.SetNum,
                 Version = i.Version,
-                Sets = i.InventorySets
+                Sets = i
+                    .InventorySets
                     .Select(s => new InventorySetDto
                     {
                         SetNum = s.SetNum,
                         Quantity = s.Quantity
                     })
                     .ToArray(),
-                Parts = i.InventoryParts
+                Parts = i
+                    .InventoryParts
                     .AsQueryable()
                     .Where(p => p.IsSpare == false)
                     .Select(InventoryPartDto())
                     .ToArray(),
-                Spares = i.InventoryParts
+                Spares = i
+                    .InventoryParts
                     .AsQueryable()
                     .Where(p => p.IsSpare)
                     .Select(InventoryPartDto())

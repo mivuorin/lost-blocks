@@ -11,11 +11,12 @@ public class LegoColorTest(DatabaseFixture fixture) : DatabaseTest(fixture)
     [LegoAutoData]
     public void Rgb_is_generated_properly(LegoColor color)
     {
-        color.Rgb.Should()
-            .HaveLength(6);
+        color.Rgb.Should().HaveLength(6);
 
         var bytes = color.Rgb.Chunk(2);
-        bytes.Should().HaveCount(3)
+        bytes
+            .Should()
+            .HaveCount(3)
             .And.AllSatisfy(b =>
                 string.Concat(b).Should().MatchRegex("^[0-9A-F]{2}$"));
     }

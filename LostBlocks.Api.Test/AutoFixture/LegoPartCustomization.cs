@@ -7,11 +7,10 @@ internal class LegoPartCustomization : ICustomization
 {
     public void Customize(IFixture fixture)
     {
-        fixture.Customize<LegoPart>(composer =>
-            composer
-                .Without(p => p.PartCatId)
-                .Without(p => p.Category)
-                .Without(p => p.InventoryParts)
+        fixture.Customize<LegoPart>(composer => composer
+            .Without(p => p.PartCatId)
+            .Without(p => p.Category)
+            .Without(p => p.InventoryParts)
         );
     }
 }

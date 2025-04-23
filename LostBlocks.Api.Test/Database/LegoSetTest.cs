@@ -15,9 +15,7 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Sets.Add(set);
         Context.SaveChanges();
 
-        LegoSet? actual = Context
-            .Sets
-            .Find(set.SetNum);
+        LegoSet? actual = Context.Sets.Find(set.SetNum);
 
         actual.Should().NotBeNull();
     }
@@ -49,11 +47,15 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Sets.Add(set);
         Context.SaveChanges();
 
-        LegoSet actual = Context.Sets
+        LegoSet actual = Context
+            .Sets
             .Include(s => s.Inventories)
             .Single(s => s.SetNum == set.SetNum);
 
-        actual.Inventories.Should().HaveCount(2)
+        actual
+            .Inventories
+            .Should()
+            .HaveCount(2)
             .And.Contain(inventory1)
             .And.Contain(inventory2);
     }
@@ -73,11 +75,15 @@ public class LegoSetTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Sets.Add(parentSet);
         Context.SaveChanges();
 
-        LegoSet actual = Context.Sets
+        LegoSet actual = Context
+            .Sets
             .Include(s => s.InventorySets)
             .Single(s => s.SetNum == parentSet.SetNum);
 
-        actual.InventorySets.Should().HaveCount(1)
+        actual
+            .InventorySets
+            .Should()
+            .HaveCount(1)
             .And.Contain(inventorySet);
     }
 }

@@ -22,7 +22,8 @@ public class LegoInventoryPartTest(DatabaseFixture fixture) : DatabaseTest(fixtu
         Context.InventoryParts.Add(inventoryPart);
         Context.SaveChanges();
 
-        LegoInventoryPart actual = Context.InventoryParts
+        LegoInventoryPart actual = Context
+            .InventoryParts
             .Include(ip => ip.Inventory)
             .Include(ip => ip.Color)
             .Include(ip => ip.Part)

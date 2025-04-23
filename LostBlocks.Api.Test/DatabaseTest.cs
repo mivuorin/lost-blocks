@@ -17,19 +17,19 @@ public class DatabaseTest : IDisposable, IAsyncDisposable
 
     protected LegoContext Context { get; }
 
-    public void Dispose()
-    {
-        transaction.Rollback();
-        transaction.Dispose();
-        Context.Dispose();
-        GC.SuppressFinalize(this);
-    }
-
     public async ValueTask DisposeAsync()
     {
         await transaction.RollbackAsync();
         await transaction.DisposeAsync();
         await Context.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
+
+    public void Dispose()
+    {
+        transaction.Rollback();
+        transaction.Dispose();
+        Context.Dispose();
         GC.SuppressFinalize(this);
     }
 }

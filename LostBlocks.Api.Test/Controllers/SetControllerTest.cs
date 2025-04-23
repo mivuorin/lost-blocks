@@ -25,13 +25,16 @@ public class SetControllerTest : DatabaseTest
         Context.Sets.AddRange(set, other);
         Context.SaveChanges();
 
-        var expected = Context.Sets
+        var expected = Context
+            .Sets
             .Where(s => s.ThemeId == theme.Id)
             .ToLookup(s => s.SetNum);
 
         var actual = await controller.Query(theme.Id);
 
-        actual.Should().HaveCount(1)
+        actual
+            .Should()
+            .HaveCount(1)
             .And.ContainSingle(s => s.SetNum == set.SetNum)
             .And.NotContain(s => s.SetNum == other.SetNum);
     }

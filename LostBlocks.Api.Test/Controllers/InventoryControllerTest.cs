@@ -28,14 +28,14 @@ public class InventoryControllerTest : DatabaseTest
         inventory.InventorySets.Add(inventorySet);
 
         part.Category = category;
-        
+
         inventoryPart.Part = part;
         inventoryPart.Color = color;
         inventoryPart.IsSpare = false;
         inventory.InventoryParts.Add(inventoryPart);
 
         spare.Category = spareCategory;
-        
+
         inventoryPartSpare.Part = spare;
         inventoryPartSpare.Color = color;
         inventoryPartSpare.IsSpare = true;
@@ -86,7 +86,7 @@ public class InventoryControllerTest : DatabaseTest
                 }
             ]
         };
-        
+
         result.Value.Should().BeEquivalentTo(expected);
     }
 

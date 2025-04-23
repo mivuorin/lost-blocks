@@ -32,7 +32,8 @@ public class LegoInventoryTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Inventories.Add(inventory);
         Context.SaveChanges();
 
-        LegoInventory actual = Context.Inventories
+        LegoInventory actual = Context
+            .Inventories
             .Include(i => i.Set)
             .Single(i => i.Id == inventory.Id);
 
@@ -62,11 +63,14 @@ public class LegoInventoryTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Inventories.Add(inventory);
         Context.SaveChanges();
 
-        LegoInventory actual = Context.Inventories
+        LegoInventory actual = Context
+            .Inventories
             .Include(i => i.InventoryParts)
             .Single(i => i.Id == inventory.Id);
 
-        actual.InventoryParts.Should().HaveCount(2)
+        actual
+            .InventoryParts.Should()
+            .HaveCount(2)
             .And.Contain(inventoryPart1)
             .And.Contain(inventoryPart2);
     }
@@ -78,21 +82,25 @@ public class LegoInventoryTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         LegoSet set1, LegoSet set2)
     {
         inventory.Set = set;
-        
+
         inventorySet1.Set = set1;
         inventorySet2.Set = set2;
-        
+
         inventory.InventorySets.Add(inventorySet1);
         inventory.InventorySets.Add(inventorySet2);
-        
+
         Context.Inventories.Add(inventory);
         Context.SaveChanges();
 
-        LegoInventory actual = Context.Inventories
+        LegoInventory actual = Context
+            .Inventories
             .Include(i => i.InventorySets)
             .Single(i => i.Id == inventory.Id);
 
-        actual.InventorySets.Should().HaveCount(2)
+        actual
+            .InventorySets
+            .Should()
+            .HaveCount(2)
             .And.Contain(inventorySet1)
             .And.Contain(inventorySet2);
     }

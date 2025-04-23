@@ -10,12 +10,14 @@ internal class LegoColorCustomization : ICustomization
         fixture.Customize<LegoColor>(composer => composer
             .Without(c => c.Id)
             .With(c => c.Rgb, () =>
-            {
-                var r = fixture.Create<byte>();
-                var g = fixture.Create<byte>();
-                var b = fixture.Create<byte>();
+                {
+                    var r = fixture.Create<byte>();
+                    var g = fixture.Create<byte>();
+                    var b = fixture.Create<byte>();
 
-                return Convert.ToHexString([r, g, b]);
-            }));
+                    return Convert.ToHexString([r, g, b]);
+                }
+            )
+        );
     }
 }

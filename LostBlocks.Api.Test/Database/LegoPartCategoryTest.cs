@@ -8,19 +8,21 @@ namespace LostBlocks.Api.Test.Database;
 
 public class LegoPartCategoryTest(DatabaseFixture fixture) : DatabaseTest(fixture)
 {
-    [Theory, LegoAutoData]
+    [Theory]
+    [LegoAutoData]
     public void Insert_with_generated_id(LegoPartCategory category)
     {
         Context.PartCategories.Add(category);
         Context.SaveChanges();
 
         category.Id.Should().NotBe(0);
-        
-        var actual = Context.PartCategories.Find(category.Id);
+
+        LegoPartCategory? actual = Context.PartCategories.Find(category.Id);
         actual.Should().NotBe(null);
     }
 
-    [Theory, LegoAutoData]
+    [Theory]
+    [LegoAutoData]
     public void Has_many_LegoParts(LegoPartCategory category, LegoPart part1, LegoPart part2)
     {
         category.Parts.Add(part1);
@@ -29,10 +31,14 @@ public class LegoPartCategoryTest(DatabaseFixture fixture) : DatabaseTest(fixtur
         Context.PartCategories.Add(category);
         Context.SaveChanges();
 
-        LegoPartCategory actual = Context.PartCategories.Include(pc => pc.Parts)
+        LegoPartCategory actual = Context
+            .PartCategories.Include(pc => pc.Parts)
             .Single(pc => pc.Id == category.Id);
 
-        actual.Parts.Should().HaveCount(2)
+        actual
+            .Parts
+            .Should()
+            .HaveCount(2)
             .And.Contain(part1)
             .And.Contain(part2);
     }

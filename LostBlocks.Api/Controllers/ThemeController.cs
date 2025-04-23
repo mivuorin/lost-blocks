@@ -45,12 +45,12 @@ public class ThemeController(LegoContext context) : ControllerBase
 
     private static int CountChildSets(IEnumerable<LegoTheme> children)
     {
-        int count = 0;
+        var count = 0;
         foreach (LegoTheme child in children)
         {
             count += child.Sets.Count + CountChildSets(child.Childs);
         }
 
-        return count; 
+        return count;
     }
 }

@@ -30,7 +30,8 @@ public class LegoPartTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Parts.Add(part);
         Context.SaveChanges();
 
-        LegoPart? actual = Context.Parts
+        LegoPart? actual = Context
+            .Parts
             .Include(p => p.Category)
             .Single(p => p.PartNum == part.PartNum);
 
@@ -43,10 +44,10 @@ public class LegoPartTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         LegoInventoryPart inventoryPart2, LegoInventory inventory, LegoColor color, LegoSet set)
     {
         inventory.Set = set;
-        
+
         inventoryPart1.Inventory = inventory;
         inventoryPart1.Color = color;
-        
+
         inventoryPart2.Inventory = inventory;
         inventoryPart2.Color = color;
 
@@ -56,11 +57,15 @@ public class LegoPartTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Parts.Add(part);
         Context.SaveChanges();
 
-        LegoPart actual = Context.Parts
+        LegoPart actual = Context
+            .Parts
             .Include(p => p.InventoryParts)
             .Single(p => p.PartNum == part.PartNum);
 
-        actual.InventoryParts.Should().HaveCount(2)
+        actual
+            .InventoryParts
+            .Should()
+            .HaveCount(2)
             .And.Contain(inventoryPart1)
             .And.Contain(inventoryPart2);
     }
