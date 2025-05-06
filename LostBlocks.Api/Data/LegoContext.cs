@@ -1,5 +1,6 @@
 ﻿using LostBlocks.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LostBlocks.Api.Data;
@@ -30,6 +31,14 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
         modelBuilder.UseSerialColumns();
 
+        // EF Core defaults to DeleteBehaviour.Cascade which can lead to accidental deletion of object graphs.
+        foreach (IMutableForeignKey mutableForeignKey in modelBuilder
+                     .Model.GetEntityTypes()
+                     .SelectMany(e => e.GetForeignKeys()))
+        {
+            mutableForeignKey.DeleteBehavior = DeleteBehavior.NoAction;
+        }
+
         modelBuilder.Entity<LegoColor>(entity =>
         {
             entity
@@ -41,23 +50,34 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity
                 .Property(e => e.Id)
                 .HasColumnName("id")
-                .HasDefaultValueSql("nextval('lego_colors_id_seq')");
+                .HasDefaultValueSql("nextval('lego_colors_id_seq')")
+                .IsRequired();
 
             entity
                 .Property(e => e.IsTransparent)
                 .HasMaxLength(1)
                 .HasColumnName("is_trans")
-                .HasConversion<CharToBoolConverter>();
+                .HasConversion<CharToBoolConverter>()
+                .IsRequired();
 
             entity
                 .Property(e => e.Name)
                 .HasMaxLength(255)
-                .HasColumnName("name");
+                .HasColumnName("name")
+                .IsRequired();
 
             entity
                 .Property(e => e.Rgb)
                 .HasMaxLength(6)
-                .HasColumnName("rgb");
+                .HasColumnName("rgb")
+                .IsRequired();
+
+            entity
+                .HasMany<LegoInventoryPart>(e => e.InventoryParts)
+                .WithOne(e => e.Color)
+                .HasForeignKey(e => e.ColorId)
+                .HasPrincipalKey(e => e.Id)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<LegoInventory>(entity =>
@@ -136,7 +156,7 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
 
             entity
                 .HasOne<LegoColor>(e => e.Color)
-                .WithMany() // TODO Add relation
+                .WithMany(e => e.InventoryParts)
                 .HasForeignKey(e => e.ColorId)
                 .HasPrincipalKey(e => e.Id);
 

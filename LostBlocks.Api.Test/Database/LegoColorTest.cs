@@ -50,4 +50,39 @@ public class LegoColorTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         LegoColor actualTransparent = Context.Colors.Single(c => c.Id == transparent.Id && c.IsTransparent == true);
         actualTransparent.IsTransparent.Should().BeTrue();
     }
+
+    [Theory]
+    [LegoAutoData]
+    public void Delete(LegoColor color)
+    {
+        Context.Colors.Add(color);
+        Context.SaveChanges();
+
+        Context.Colors.Remove(color);
+        Context.SaveChanges();
+
+        LegoColor? actual = Context.Colors.Find(color.Id);
+
+        actual.Should().BeNull();
+    }
+
+    [Theory]
+    [LegoAutoData]
+    public void Delete_should_not_cascade(LegoColor color, LegoSet set, LegoInventory inventory,
+        LegoInventoryPart inventoryPart,
+        LegoPart part)
+    {
+        inventory.Set = set;
+
+        inventoryPart.Inventory = inventory;
+        inventoryPart.Color = color;
+        inventoryPart.Part = part;
+
+        color.InventoryParts.Add(inventoryPart);
+        Context.Colors.Add(color);
+        Context.SaveChanges();
+
+        var act = () => Context.Remove(color);
+        act.Should().Throw<InvalidOperationException>();
+    }
 }

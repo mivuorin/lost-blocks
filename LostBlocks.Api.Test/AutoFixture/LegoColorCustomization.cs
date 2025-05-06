@@ -9,6 +9,7 @@ internal class LegoColorCustomization : ICustomization
     {
         fixture.Customize<LegoColor>(composer => composer
             .Without(c => c.Id)
+            .Without(c => c.InventoryParts)
             .With(c => c.Rgb, () =>
                 {
                     var r = fixture.Create<byte>();
