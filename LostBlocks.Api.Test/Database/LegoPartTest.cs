@@ -30,7 +30,7 @@ public class LegoPartTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.Parts.Add(part);
         Context.SaveChanges();
 
-        LegoPart? actual = Context
+        LegoPart actual = Context
             .Parts
             .Include(p => p.Category)
             .Single(p => p.PartNum == part.PartNum);
