@@ -67,12 +67,12 @@ public class ColorControllerTest : DatabaseTest
 
     [Theory]
     [LegoAutoData]
-    public async Task Post_saves_new_color(string name, bool isTransparent) // TODO generate better rgb
+    public async Task Post_saves_new_color(string name, RgbColor rgb, bool isTransparent)
     {
         var create = new CreateColorDto
         {
             Name = name,
-            Rgb = "0F0F0F",
+            Rgb = rgb.Value(),
             IsTransparent = isTransparent
         };
 
@@ -128,7 +128,7 @@ public class ColorControllerTest : DatabaseTest
         ActionResult result = await controller.Put(int.MinValue, updateColorDto);
         result.Should().BeOfType<NotFoundResult>();
     }
-    
+
     [Theory]
     [LegoAutoData]
     public async Task Delete_deletes_color(LegoColor color)

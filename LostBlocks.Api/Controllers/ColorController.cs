@@ -71,7 +71,7 @@ public class ColorController(LegoContext context) : ControllerBase
         {
             return NotFound();
         }
-        
+
         color.IsTransparent = updateColorDto.IsTransparent;
         color.Name = updateColorDto.Name;
         color.Rgb = updateColorDto.Rgb;
