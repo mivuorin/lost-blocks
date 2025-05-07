@@ -5,7 +5,7 @@ namespace LostBlocks.Api.Test.AutoFixture;
 
 /// <summary>
 ///     Automatic test data generation.
-///     Note! All relations and hierarchies are not initialized.
+///     Note! All entity relations and hierarchies are not initialized.
 /// </summary>
 public class LegoAutoData() : AutoDataAttribute(FixtureFactory)
 {

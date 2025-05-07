@@ -1,6 +1,10 @@
-# demo-db-integration-test
+# LostBlocks
 
-Demo for database integration test practices.
+Demo for database integration test practices. LostBlocks is api for managing Lego sample database similar
+to https://rebrickable.com/.
+
+Project simulates generic api project with database and how it can be tested with real database server, instead of using
+mock or stub replacement.
 
 ## Quickstart
 
@@ -12,9 +16,40 @@ It should build custom postgres dockerfile and initialize sample database from l
 docker-compose up
 ```
 
+2. Run tests
+
+```shell
+dotnet test
+```
+
+3. Run Api project
+
+```shell
+dotnet run --project LostBlocks.Api
+```
+
+## Why?
+
+Containerization and computation resources have improved in such way that abstracting database dependency from tests is
+not needed anymore.
+
+In past installing database servers was cumbersome and could not be done on the fly, which made setting up development
+environments and CI pipelines hard. This problem is now solved with docker containers.
+
+Abstracting database dependency takes significant extra effort from architecture design and almost always ends up
+causing leaky abstraction problems.
+
+This demo project is a study on what kind of effects using real database introduce to normal development process with
+unit testing.
+
 ## Characteristics of good tests
 
-F.I.R.S.T rule of tests.
+Writing and running tests should be as frictionless as possible, otherwise developer start skipping writing tests which
+eventually leads to poor test coverage.
+
+Supporting and maintaining test automation with poor coverage has very low return of investment value.
+
+There's F.I.R.S.T rule of tests which help to reduce friction caused by tests:
 
 Fast - Test runtime matters and when it reaches certain limit it will slow down development.
 
@@ -61,8 +96,7 @@ It's very common for applications, especially web apps, to store data in databas
 code is categorized under CRUD (Create - Retrieve - Update - Delete), so most of the code depends on database.
 
 Using real database in all tests helps in improving test coverage and in finding those pesky bugs which leak through
-tests
-by mismatch between in-memory stub and real database used in production.
+tests by mismatch between in-memory stub and real database used in production.
 
 There will be no need for additional integration tests which usually overlap code covered by unit tests.
 
@@ -77,10 +111,10 @@ ORMs need to be configured to correctly map against database schema, which can b
 
 ## Patterns to avoid problems caused by shared database
 
-### 1. Transaction Rollback on Teardown pattern
+### Transaction Rollback on Teardown -pattern
 
 Single test is run inside of database transaction which will be rolled back when test is finished.
-This makes sure that tests there is no persistent data
+This makes sure that tests do not have persistent data and database state keeps unmodified after tests.
 
 ### Shared database connection in tests
 
@@ -89,7 +123,9 @@ tests or database connection pooling.
 
 Entity Framework already uses connection pooling on lower level, so it does not require extra configuration.
 
-### Do not share instance of DbContext between tests
+### Do not share instance of DbContext between tests (TODO)
+
+(TODO write with general orm concept and use EF as specific.)
 
 Entity Framework DbContext has internal state (change tracker, identity map...) which should not be shared between
 tests.
@@ -101,9 +137,25 @@ Tests uses PooledDbContextFactory to instantiate DbContext, which automatically 
 and resets context state
 when context is disposed. This makes context creation faster.
 
+### Tests arrange their own data (TODO)
+
+Tests should always have full control in their own test data. 
+* use generators
+* avoid sharing test cases
+* avoid relying on shared state in database
+
+Avoid shared state at all costs!
+
 https://learn.microsoft.com/en-us/ef/core/performance/advanced-performance-topics?tabs=without-di%2Cexpression-api-with-constant#dbcontext-pooling
 
-## Scaffolding database
+## Technical details
+
+### Automatic request validation
+
+Api uses [FluentValidation](https://docs.fluentvalidation.net/) and [SharpGrid.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation) for
+validating request DTO's automatically on Asp.Net modeling binding.
+
+### Scaffolding database
 
 Following script can be used to generate Entity Framework Core entities from existing database schema.
 
@@ -111,13 +163,36 @@ Following script can be used to generate Entity Framework Core entities from exi
 dotnet ef dbcontext scaffold name=lego --context-dir Data --output-dir Models Npgsql.EntityFrameworkCore.PostgreSQL -- --environment Development
 ```
 
-## Docker database container
+### Docker database container
 
 Project uses custom Postgres docker image [lego-db.dockerfile](lego-db.dockerfile) which is seeded from Lego sample
 database [lego.sql](lego.sql)
 and run with docker-compose [compose.yaml](compose.yaml)
 
-## Lego sample database license (lego.sql)
+## Problems in sample database
+
+### Sequences are not set to correct values after seeding data
+
+Some tables use sequences for primary keys which are not set to correct starting values after seeding data.
+This causes sequences to generate conflicting primary key values on inserts.
+
+This is fixed in [lego-sequence-fix.sql](lego-sequence-fix.sql).
+
+### Foreign key constraints are missing
+
+Most of the tables are missing foreign key constraints.
+
+### Delete cascades are also missing because of missing foreign keys
+
+Not having proper delete rules configured for relationships makes it hard to do proper deletes
+and can lead to accidental data loss when deleting graphs.
+
+Developers should take be extra careful when working with Entity Framework because, Entity Framework uses cascading
+delete behaviour by default.
+
+## Licenses
+
+### Lego sample database license (lego.sql)
 
 Lego set can consist of one or more Inventories and is identified by set number (set_num eg. 8088-1)
 
@@ -138,22 +213,4 @@ https://rebrickable.com/downloads/
 Rebrickable does only provide CSV data sets and not database schema. Updated database schema diagram can be found here.
 https://rebrickable.com/help/lego-database/
 
-### Problems in sample database
 
-#### Sequences are not set to correct values after seeding data
-
-Some tables use sequences for primary keys which are not set to correct starting values after seeding data.
-This causes sequences to generate conflicting primary key values on inserts.
-
-This is fixed in [lego-sequence-fix.sql](lego-sequence-fix.sql).
-
-#### Foreign key constraints are missing
-
-Most of the tables are missing foreign key constraints.
-
-### Delete cascades are also missing because of missing foreign keys
-
-Not having proper delete rules configured for relationships makes it hard to do proper deletes
-and can lead to accidental data loss when deleting graphs.
-
-Developers should take be extra careful when working with Entity Framework because, Entity Framework uses cascading delete behaviour by default.
