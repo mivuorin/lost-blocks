@@ -3,9 +3,9 @@ using LostBlocks.Api.Validation;
 
 namespace LostBlocks.Api.Controllers;
 
-public class CreateColorDtoValidator : AbstractValidator<CreateColorDto>
+public class UpdateColorDtoValidator : AbstractValidator<UpdateColorDto>
 {
-    public CreateColorDtoValidator()
+    public UpdateColorDtoValidator()
     {
         RuleFor(dto => dto.Name).NotEmpty();
         RuleFor(dto => dto.Rgb)

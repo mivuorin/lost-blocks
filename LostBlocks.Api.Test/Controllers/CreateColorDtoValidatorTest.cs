@@ -18,17 +18,6 @@ public class CreateColorDtoValidatorTest
         result.ShouldNotHaveAnyValidationErrors();
     }
 
-    private static CreateColorDto CreateValidDto()
-    {
-        // TODO Use generated values!
-        return new CreateColorDto
-        {
-            Name = "name",
-            Rgb = "0F0F0F",
-            IsTransparent = false
-        };
-    }
-
     [Theory]
     [InlineData(null!)]
     [InlineData("")]
@@ -97,5 +86,27 @@ public class CreateColorDtoValidatorTest
         var result = validator.TestValidate(dto);
 
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public void Rgb_should_use_rgb_validator()
+    {
+        CreateColorDto dto = CreateValidDto() with { Rgb = "invalid" };
+
+        var result = validator.TestValidate(dto);
+
+        result
+            .ShouldHaveValidationErrorFor(e => e.Rgb)
+            .WithErrorMessage("'Rgb' is not a valid 6-byte hex string.");
+    }
+
+    private static CreateColorDto CreateValidDto()
+    {
+        return new CreateColorDto
+        {
+            Name = "name",
+            Rgb = "0F0F0F",
+            IsTransparent = false
+        };
     }
 }
