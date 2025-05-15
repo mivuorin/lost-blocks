@@ -107,7 +107,7 @@ public class ColorControllerTest : DatabaseTest
 
         ActionResult result = await controller.Put(color.Id, colorDto);
 
-        result.Should().BeOfType<OkResult>();
+        result.Should().BeOfType<NoContentResult>();
 
         LegoColor actual = Context.Colors.Single(c => c.Id == color.Id);
 
@@ -141,7 +141,7 @@ public class ColorControllerTest : DatabaseTest
         // ExecuteDelete does not update change tracker, so deleted entity is still  tracked.
         Context.ChangeTracker.Clear();
 
-        result.Should().BeOfType<OkResult>();
+        result.Should().BeOfType<NoContentResult>();
 
         LegoColor? actual = Context.Colors.Find(color.Id);
         actual.Should().BeNull();

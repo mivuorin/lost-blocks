@@ -78,7 +78,7 @@ public class ColorController(LegoContext context) : ControllerBase
 
         await context.SaveChangesAsync();
 
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete("{id:int}")]
@@ -89,6 +89,6 @@ public class ColorController(LegoContext context) : ControllerBase
             .Where(c => c.Id == id)
             .ExecuteDeleteAsync();
 
-        return Ok();
+        return NoContent();
     }
 }

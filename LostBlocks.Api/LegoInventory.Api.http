@@ -59,3 +59,37 @@ Accept: application/json
 DELETE {{root}}/color/12750
 Accept: application/json
 
+### Get all categories
+
+GET {{root}}/category
+Accept: application/json
+
+### Get category by id
+
+GET {{root}}/category/8
+Accept: application/json
+
+### Create category
+
+POST {{root}}/category
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "http-test"
+}
+
+### Update category
+
+PUT {{root}}/category/3784
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "update-test"
+}
+
+### Delete color
+
+DELETE {{root}}/color/3784
+Accept: application/json

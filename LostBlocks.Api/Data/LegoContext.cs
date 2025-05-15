@@ -242,7 +242,8 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasMany<LegoPart>(e => e.Parts)
                 .WithOne(e => e.Category)
                 .HasForeignKey(e => e.PartCatId)
-                .HasPrincipalKey(e => e.Id);
+                .HasPrincipalKey(e => e.Id)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<LegoSet>(entity =>

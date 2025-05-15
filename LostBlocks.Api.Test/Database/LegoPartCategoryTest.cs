@@ -42,4 +42,16 @@ public class LegoPartCategoryTest(DatabaseFixture fixture) : DatabaseTest(fixtur
             .And.Contain(part1)
             .And.Contain(part2);
     }
+
+    [Theory]
+    [LegoAutoData]
+    public void Delete_should_not_cascade(LegoPartCategory category, LegoPart part)
+    {
+        category.Parts.Add(part);
+        Context.PartCategories.Add(category);
+        Context.SaveChanges();
+
+        var act = () => Context.Remove(category);
+        act.Should().Throw<InvalidOperationException>();
+    }
 }

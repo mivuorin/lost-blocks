@@ -139,7 +139,8 @@ when context is disposed. This makes context creation faster.
 
 ### Tests arrange their own data (TODO)
 
-Tests should always have full control in their own test data. 
+Tests should always have full control in their own test data.
+
 * use generators
 * avoid sharing test cases
 * avoid relying on shared state in database
@@ -152,7 +153,8 @@ https://learn.microsoft.com/en-us/ef/core/performance/advanced-performance-topic
 
 ### Automatic request validation
 
-Api uses [FluentValidation](https://docs.fluentvalidation.net/) and [SharpGrid.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation) for
+Api uses [FluentValidation](https://docs.fluentvalidation.net/)
+and [SharpGrid.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation) for
 validating request DTO's automatically on Asp.Net modeling binding.
 
 ### Scaffolding database
@@ -168,6 +170,48 @@ dotnet ef dbcontext scaffold name=lego --context-dir Data --output-dir Models Np
 Project uses custom Postgres docker image [lego-db.dockerfile](lego-db.dockerfile) which is seeded from Lego sample
 database [lego.sql](lego.sql)
 and run with docker-compose [compose.yaml](compose.yaml)
+
+### Entity framework and nullable reference types
+
+Entity framework uses virtual proxies to populate entities when executing queries, which does not always work well with
+.Net's nullable reference type -feature.
+
+Related entities can either be `null` or populated on demand with `Include` method or by lazy loading.
+
+There's a trade off in declaring entity relations as nullable or not:
+
+#### Nullable - requires extra null checks in code
+
+Every query needs to have extra null check when traversing relations.
+
+```csharp
+var part = Context.Parts
+    .Include(p => p.Category)
+    .Where(p => p.Category != null && p.Category.Name == category.Name);
+```
+
+Benefit is that compiler gives warnings on missing null checks and runtime null exceptions should not happen.
+
+#### Not null - possible runtime null exceptions
+
+All relations need to be initialized to null or empty collections to suppress uninitialized nullable property -warning.
+
+```csharp
+public LegoPartCategory Category { get; set; } = null!;
+```
+
+Benefit is that now there is no need for extra null checks in queries, but runtime null exceptions might happen if query
+does not populate relationship.
+
+```csharp
+var part = Context.Parts
+    .Include(p => p.Category)
+    .Where(p => p.Category.Name == category.Name);
+```
+
+Projects uses latter approach to reduce extra code and relies on unit tests
+and [IDE code inspection](https://www.jetbrains.com/help/rider/EntityFramework.NPlusOne.IncompleteDataQuery.html) for
+catching runtime exceptions.
 
 ## Problems in sample database
 
