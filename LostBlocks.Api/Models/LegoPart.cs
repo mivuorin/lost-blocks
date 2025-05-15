@@ -4,7 +4,7 @@ public class LegoPart
 {
     public required string PartNum { get; set; }
     public required string Name { get; set; }
-    public int PartCatId { get; set; }
-    public required LegoPartCategory Category { get; set; }
+    public required int CategoryId { get; set; }
+    public LegoPartCategory Category { get; set; } = null!;
     public ICollection<LegoInventoryPart> InventoryParts { get; set; } = [];
 }

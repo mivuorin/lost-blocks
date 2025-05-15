@@ -89,7 +89,40 @@ Accept: application/json
   "name": "update-test"
 }
 
-### Delete color
+### Delete category
 
-DELETE {{root}}/color/3784
+DELETE {{root}}/category/4408
+Accept: application/json
+
+### Get part by partNun
+
+GET {{root}}/part/http-test
+Accept: application/json
+
+### Create part
+
+POST {{root}}/part
+Content-Type: application/json
+Accept: application/json
+
+{
+  "partNum": "http-test",
+  "name": "part-name",
+  "categoryId": 4408
+}
+
+### Update part
+
+PUT {{root}}/part/http-test
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "updated-name",
+  "categoryId": 4408
+}
+
+### Delete part
+
+DELETE {{root}}/part/http-test
 Accept: application/json

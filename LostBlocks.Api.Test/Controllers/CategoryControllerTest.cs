@@ -135,7 +135,7 @@ public class CategoryControllerTest : DatabaseTest
             .PartCategories
             .AsNoTracking()
             .SingleOrDefault(c => c.Id == category.Id);
-        
+
         actual.Should().BeNull();
     }
 }

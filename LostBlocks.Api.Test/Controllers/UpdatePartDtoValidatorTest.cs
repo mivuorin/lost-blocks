@@ -4,21 +4,27 @@ using Xunit;
 
 namespace LostBlocks.Api.Test.Controllers;
 
-public class UpdateCategoryDtoValidatorTest
+public class UpdatePartDtoValidatorTest
 {
-    private readonly UpdateCategoryDtoValidator validator = new();
+    private readonly UpdatePartDtoValidator validator = new();
 
     [Fact]
     public void Valid()
     {
-        var dto = new UpdateCategoryDto
-        {
-            Name = "name"
-        };
+        UpdatePartDto dto = ValidDto();
 
         var result = validator.TestValidate(dto);
 
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    private static UpdatePartDto ValidDto()
+    {
+        return new UpdatePartDto
+        {
+            Name = "Name",
+            CategoryId = 1
+        };
     }
 
     [Theory]
@@ -26,7 +32,7 @@ public class UpdateCategoryDtoValidatorTest
     [InlineData(null)]
     public void Name_IsRequired(string? name)
     {
-        var dto = new UpdateCategoryDto { Name = name! };
+        UpdatePartDto dto = ValidDto() with { Name = name! };
 
         var result = validator.TestValidate(dto);
 

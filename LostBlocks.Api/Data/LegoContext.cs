@@ -205,19 +205,21 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasMaxLength(255)
                 .HasColumnName("part_num");
             entity.Property(e => e.Name).HasColumnName("name");
-            entity.Property(e => e.PartCatId).HasColumnName("part_cat_id");
+            entity.Property(e => e.CategoryId).HasColumnName("part_cat_id");
 
             entity
                 .HasOne<LegoPartCategory>(e => e.Category)
                 .WithMany(e => e.Parts)
-                .HasForeignKey(e => e.PartCatId)
-                .HasPrincipalKey(e => e.Id);
+                .HasForeignKey(e => e.CategoryId)
+                .HasPrincipalKey(e => e.Id)
+                .OnDelete(DeleteBehavior.NoAction);
 
             entity
                 .HasMany<LegoInventoryPart>(e => e.InventoryParts)
                 .WithOne(p => p.Part)
                 .HasForeignKey(e => e.PartNum)
-                .HasPrincipalKey(e => e.PartNum);
+                .HasPrincipalKey(e => e.PartNum)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<LegoPartCategory>(entity =>
@@ -241,7 +243,7 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
             entity
                 .HasMany<LegoPart>(e => e.Parts)
                 .WithOne(e => e.Category)
-                .HasForeignKey(e => e.PartCatId)
+                .HasForeignKey(e => e.CategoryId)
                 .HasPrincipalKey(e => e.Id)
                 .OnDelete(DeleteBehavior.NoAction);
         });
