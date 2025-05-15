@@ -69,14 +69,14 @@ public class ColorControllerTest : DatabaseTest
     [LegoAutoData]
     public async Task Post_saves_new_color(string name, RgbColor rgb, bool isTransparent)
     {
-        var create = new CreateColorDto
+        var colorDto = new CreateColorDto
         {
             Name = name,
             Rgb = rgb.Value(),
             IsTransparent = isTransparent
         };
 
-        ActionResult result = await controller.Post(create);
+        ActionResult result = await controller.Post(colorDto);
         result.Should().BeOfType<CreatedAtActionResult>();
 
         var createdResult = (CreatedAtActionResult)result;
@@ -98,14 +98,14 @@ public class ColorControllerTest : DatabaseTest
         Context.Colors.Add(color);
         Context.SaveChanges();
 
-        var updateColorDto = new UpdateColorDto
+        var colorDto = new UpdateColorDto
         {
             Name = expected.Name,
             Rgb = expected.Rgb,
             IsTransparent = expected.IsTransparent
         };
 
-        ActionResult result = await controller.Put(color.Id, updateColorDto);
+        ActionResult result = await controller.Put(color.Id, colorDto);
 
         result.Should().BeOfType<OkResult>();
 
@@ -118,14 +118,14 @@ public class ColorControllerTest : DatabaseTest
     [Fact]
     public async Task Put_return_404_when_color_not_found()
     {
-        var updateColorDto = new UpdateColorDto
+        var colorDto = new UpdateColorDto
         {
             Name = "name",
             Rgb = "000000",
             IsTransparent = false
         };
 
-        ActionResult result = await controller.Put(int.MinValue, updateColorDto);
+        ActionResult result = await controller.Put(int.MinValue, colorDto);
         result.Should().BeOfType<NotFoundResult>();
     }
 

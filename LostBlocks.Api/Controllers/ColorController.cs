@@ -47,13 +47,13 @@ public class ColorController(LegoContext context) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post(CreateColorDto createColorDto)
+    public async Task<ActionResult> Post(CreateColorDto colorDto)
     {
         var color = new LegoColor
         {
-            Name = createColorDto.Name,
-            Rgb = createColorDto.Rgb,
-            IsTransparent = createColorDto.IsTransparent
+            Name = colorDto.Name,
+            Rgb = colorDto.Rgb,
+            IsTransparent = colorDto.IsTransparent
         };
 
         context.Colors.Add(color);
@@ -63,7 +63,7 @@ public class ColorController(LegoContext context) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> Put(int id, UpdateColorDto updateColorDto)
+    public async Task<ActionResult> Put(int id, UpdateColorDto colorDto)
     {
         LegoColor? color = await context.Colors.FindAsync(id);
 
@@ -72,9 +72,9 @@ public class ColorController(LegoContext context) : ControllerBase
             return NotFound();
         }
 
-        color.IsTransparent = updateColorDto.IsTransparent;
-        color.Name = updateColorDto.Name;
-        color.Rgb = updateColorDto.Rgb;
+        color.IsTransparent = colorDto.IsTransparent;
+        color.Name = colorDto.Name;
+        color.Rgb = colorDto.Rgb;
 
         await context.SaveChangesAsync();
 
