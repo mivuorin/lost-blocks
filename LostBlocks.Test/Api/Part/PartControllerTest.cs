@@ -114,18 +114,18 @@ public class PartControllerTest : DatabaseTest
     public async Task Delete_removes_category(LegoPart part, LegoPartCategory category)
     {
         part.Category = category;
-        
+
         Context.Parts.Add(part);
         Context.SaveChanges();
-    
+
         ActionResult result = await controller.Delete(part.PartNum);
         result.Should().BeOfType<NoContentResult>();
-    
+
         LegoPart? actual = Context
             .Parts
             .AsNoTracking()
             .SingleOrDefault(p => p.PartNum == part.PartNum);
-        
+
         actual.Should().BeNull();
     }
 }

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.ComponentModel.DataAnnotations;
+using FluentAssertions;
 using LostBlocks.Models;
 using LostBlocks.Test.AutoFixture;
 using Microsoft.EntityFrameworkCore;
@@ -105,5 +106,17 @@ public class LegoPartTest(DatabaseFixture fixture) : DatabaseTest(fixture)
 
         LegoPart? actual = Context.Parts.AsNoTracking().SingleOrDefault(p => p.PartNum == part.PartNum);
         actual.Should().BeNull();
+    }
+
+    [Theory]
+    [LegoAutoData]
+    public void Part_num_max_length(LegoPart part, [MinLength(256)] string partNum)
+    {
+        part.PartNum = partNum;
+
+        Context.Parts.Add(part);
+
+        var act = () => Context.SaveChanges();
+        act.Should().Throw<DbUpdateException>();
     }
 }
