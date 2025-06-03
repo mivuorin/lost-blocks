@@ -234,6 +234,10 @@ and can lead to accidental data loss when deleting graphs.
 Developers should take be extra careful when working with Entity Framework because, Entity Framework uses cascading
 delete behaviour by default.
 
+### Theme is not required for Sets
+
+`lego_sets.theme_id` column is nullable, so theme is not required for sets. 
+
 ## Licenses
 
 ### Lego sample database license (lego.sql)

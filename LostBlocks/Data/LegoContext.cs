@@ -323,7 +323,15 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasOne(e => e.Parent)
                 .WithMany(e => e.Childs)
                 .HasForeignKey(e => e.ParentId)
-                .HasPrincipalKey(e => e.Id);
+                .HasPrincipalKey(e => e.Id)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity
+                .HasMany(e => e.Sets)
+                .WithOne(e => e.Theme)
+                .HasForeignKey(e => e.ThemeId)
+                .HasPrincipalKey(e => e.Id)
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.HasSequence<int>("lego_colors_id_seq");

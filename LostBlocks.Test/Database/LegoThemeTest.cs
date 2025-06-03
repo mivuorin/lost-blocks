@@ -71,4 +71,40 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Assert.Equal(theme, set.Theme);
         Assert.Contains(set, theme.Sets);
     }
+
+    [Theory]
+    [LegoAutoData]
+    public void Delete_clears_theme_from_related_sets(LegoTheme theme, LegoSet set)
+    {
+        theme.Sets.Add(set);
+
+        Context.Themes.Add(theme);
+        Context.SaveChanges();
+
+        set.ThemeId.Should().Be(theme.Id);
+        
+        Context.Remove(theme);
+        Context.SaveChanges();
+
+        LegoSet actual = Context.Sets.Single(s => s.SetNum == set.SetNum);
+        actual.ThemeId.Should().BeNull();
+    }
+
+    [Theory]
+    [LegoAutoData]
+    public void Delete_clears_parent_from_child(LegoTheme parent, LegoTheme child)
+    {
+        parent.Childs.Add(child);
+
+        Context.Themes.Add(parent);
+        Context.SaveChanges();
+
+        child.ParentId.Should().Be(parent.Id);
+        
+        Context.Themes.Remove(parent);
+        Context.SaveChanges();
+
+        LegoTheme actual = Context.Themes.Single(t => t.Id == child.Id);
+        actual.ParentId.Should().BeNull();
+    }
 }

@@ -5,6 +5,11 @@
 GET {{root}}/theme
 Accept: application/json
 
+### Get theme details by id
+
+GET {{root}}/theme/1
+Accept: application/json
+
 ### Get sets by theme
 
 GET {{root}}/set?themeId=1

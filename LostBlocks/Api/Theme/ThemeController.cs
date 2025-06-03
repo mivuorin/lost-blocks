@@ -9,6 +9,7 @@ namespace LostBlocks.Api.Theme;
 [Route("theme")]
 public class ThemeController(LegoContext context) : ControllerBase
 {
+    [HttpGet]
     public async Task<IEnumerable<ThemeDto>> Get()
     {
         var themes = await context
@@ -52,5 +53,72 @@ public class ThemeController(LegoContext context) : ControllerBase
         }
 
         return count;
+    }
+
+    [HttpGet("{themeId}")]
+    public async Task<ActionResult<ThemeDetailsDto>> GetById(int themeId)
+    {
+        var theme = await context
+            .Themes
+            .AsNoTrackingWithIdentityResolution()
+            .Where(t => t.Id == themeId)
+            .Select(t => new ThemeDetailsDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                ParentId = t.ParentId
+            })
+            .SingleOrDefaultAsync(t => t.Id == themeId);
+
+        if (theme is null)
+        {
+            return NotFound();
+        }
+
+        return theme;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Post(CreateThemeDto themeDto)
+    {
+        var theme = new LegoTheme
+        {
+            Name = themeDto.Name,
+            ParentId = themeDto.ParentId
+        };
+
+        context.Themes.Add(theme);
+        await context.SaveChangesAsync();
+        
+        return CreatedAtAction("GetById", new { theme.Id }, theme.Id);
+    }
+
+    [HttpPut("{themeId}")]
+    public async Task<ActionResult> Put(int themeId, UpdateThemeDto themeDto)
+    {
+        LegoTheme? theme = await context.Themes.SingleOrDefaultAsync(t => t.Id == themeId);
+
+        if (theme is null)
+        {
+            return NotFound();
+        }
+        
+        theme.Name = themeDto.Name;
+        theme.ParentId = themeDto.ParentId;
+
+        await context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{themeId}")]
+    public async Task<ActionResult> Delete(int themeId)
+    {
+        await context
+            .Themes
+            .Where(t => t.Id == themeId)
+            .ExecuteDeleteAsync();
+
+        return NoContent();
     }
 }
