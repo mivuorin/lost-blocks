@@ -82,7 +82,7 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.SaveChanges();
 
         set.ThemeId.Should().Be(theme.Id);
-        
+
         Context.Remove(theme);
         Context.SaveChanges();
 
@@ -100,7 +100,7 @@ public class LegoThemeTest(DatabaseFixture fixture) : DatabaseTest(fixture)
         Context.SaveChanges();
 
         child.ParentId.Should().Be(parent.Id);
-        
+
         Context.Themes.Remove(parent);
         Context.SaveChanges();
 

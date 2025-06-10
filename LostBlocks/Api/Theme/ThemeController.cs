@@ -58,7 +58,7 @@ public class ThemeController(LegoContext context) : ControllerBase
     [HttpGet("{themeId}")]
     public async Task<ActionResult<ThemeDetailsDto>> GetById(int themeId)
     {
-        var theme = await context
+        ThemeDetailsDto? theme = await context
             .Themes
             .AsNoTrackingWithIdentityResolution()
             .Where(t => t.Id == themeId)
@@ -89,7 +89,7 @@ public class ThemeController(LegoContext context) : ControllerBase
 
         context.Themes.Add(theme);
         await context.SaveChangesAsync();
-        
+
         return CreatedAtAction("GetById", new { theme.Id }, theme.Id);
     }
 
@@ -102,7 +102,7 @@ public class ThemeController(LegoContext context) : ControllerBase
         {
             return NotFound();
         }
-        
+
         theme.Name = themeDto.Name;
         theme.ParentId = themeDto.ParentId;
 

@@ -171,6 +171,23 @@ Project uses custom Postgres docker image [lego-db.dockerfile](lego-db.dockerfil
 database [lego.sql](lego.sql)
 and run with docker-compose [compose.yaml](compose.yaml)
 
+### Code formatting and inspections
+
+Project uses .editorconfig for code formatting and [Jetbrains CLI tools](https://www.jetbrains.com/resharper/features/command-line.html) for formatting code
+and running code inspections.
+
+Code formatting can be run with following script.
+
+```shell
+dotnet jb cleanupcode --config=cleanupcode-config.xml
+```
+
+Inspections can be run with following script. 
+
+```shell
+dotnet jb inspectcode --config=inspectcode-config.xml
+```
+
 ### Entity framework and nullable reference types
 
 Entity framework uses virtual proxies to populate entities when executing queries, which does not always work well with
@@ -260,5 +277,3 @@ https://rebrickable.com/downloads/
 
 Rebrickable does only provide CSV data sets and not database schema. Updated database schema diagram can be found here.
 https://rebrickable.com/help/lego-database/
-
-

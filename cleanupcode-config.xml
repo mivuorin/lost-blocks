@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CleanupCodeOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Debug>false</Debug>
+  <Verbosity>WARN</Verbosity>
+  <SolutionFile>.\LostBlocks.sln</SolutionFile>
+  <DisabledSettingsLayers />
+  <SuppressBuildInSettings>false</SuppressBuildInSettings>
+  <Properties />
+  <TargetsForReferences />
+  <TargetsForItems />
+  <Extensions />
+  <ExtensionSources />
+  <Measure>None</Measure>
+  <NoBuild>true</NoBuild>
+  <Build>false</Build>
+  <NoCheckForUpdates>true</NoCheckForUpdates>
+  <CustomSettingsProfiles />
+</CleanupCodeOptions>

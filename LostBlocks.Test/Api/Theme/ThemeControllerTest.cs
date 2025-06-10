@@ -109,17 +109,17 @@ public class ThemeControllerTest : DatabaseTest
             Name = name,
             ParentId = null
         };
-    
+
         ActionResult result = await controller.Post(themeDto);
         result.Should().BeOfType<CreatedAtActionResult>();
-    
+
         var createdResult = (CreatedAtActionResult)result;
         createdResult.Value.Should().BeOfType<int>();
         createdResult.ActionName.Should().Be(nameof(ThemeController.GetById));
 
         var id = (int)createdResult.Value;
 
-        var actual = Context.Themes.Single(t => t.Id == id);
+        LegoTheme actual = Context.Themes.Single(t => t.Id == id);
         actual.Name.Should().Be(name);
     }
 
@@ -129,22 +129,22 @@ public class ThemeControllerTest : DatabaseTest
     {
         Context.Themes.Add(parent);
         Context.SaveChanges();
-        
+
         var themeDto = new CreateThemeDto
         {
             Name = name,
             ParentId = parent.Id
         };
-    
+
         ActionResult result = await controller.Post(themeDto);
         result.Should().BeOfType<CreatedAtActionResult>();
-    
+
         var createdResult = (CreatedAtActionResult)result;
         createdResult.Value.Should().BeOfType<int>();
 
         var id = (int)createdResult.Value;
 
-        var actual = Context.Themes.Single(t => t.Id == id);
+        LegoTheme actual = Context.Themes.Single(t => t.Id == id);
         actual.Name.Should().Be(name);
         actual.ParentId.Should().Be(parent.Id);
     }
@@ -155,7 +155,7 @@ public class ThemeControllerTest : DatabaseTest
     {
         Context.Themes.Add(theme);
         Context.SaveChanges();
-        
+
         var themeDto = new UpdateThemeDto
         {
             Name = name,
@@ -185,10 +185,10 @@ public class ThemeControllerTest : DatabaseTest
         ActionResult result = await controller.Put(theme.Id, themeDto);
         result.Should().BeOfType<NoContentResult>();
 
-        var actual = Context
+        LegoTheme actual = Context
             .Themes.Include(legoTheme => legoTheme.Parent)
             .Single(t => t.Id == theme.Id);
-        
+
         actual.Parent.Should().BeEquivalentTo(parent);
     }
 
