@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <LangVersion>13</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

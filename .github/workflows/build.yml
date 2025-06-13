@@ -2,7 +2,7 @@
 
 on: push
 
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-latest
     
@@ -22,25 +22,32 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with: 
-        dotnet-version: 9.0.x
-        cache: true
-        cache-dependency-path: "**/packages.lock.json"
-    - name: Restore
-      run: dotnet restore --locked-mode
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Init database
-      run: |
-        psql -f lego.sql
-        psql -f lego-sequence-fix.sql
-      env:
-        PGHOST: localhost
-        PGDATABASE: lego
-        PGUSER: admin
-        PGPASSWORD: oBR0257i4tu54bHMakU9hGI2vMCUQyg1
-    - name: Test
-      run: dotnet test --no-build
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+      # ReSharper CLI needs to be installed as global to avoid missing assembly Microsoft.Bcl.AsyncInterfaces error
+      - name: Install ReSharper CLI
+        run: dotnet tool install JetBrains.ReSharper.GlobalTools --global
+      - name: Restore
+        run: dotnet restore --locked-mode
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Format code
+        run: jb cleanupcode --config=cleanupcode-config.xml
+      - name: Verify code format
+        run: git diff --exit-code
+      - name: Init database
+        run: |
+          psql -f lego.sql
+          psql -f lego-sequence-fix.sql
+        env:
+          PGHOST: localhost
+          PGDATABASE: lego
+          PGUSER: admin
+          PGPASSWORD: oBR0257i4tu54bHMakU9hGI2vMCUQyg1
+      - name: Test
+        run: dotnet test --no-build

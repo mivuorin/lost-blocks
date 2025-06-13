@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<InspectCodeOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Debug>false</Debug>
-    <Verbosity>WARN</Verbosity>
-    <SolutionFile>.\LostBlocks.sln</SolutionFile>
-    <DisabledSettingsLayers />
-    <SuppressBuildInSettings>false</SuppressBuildInSettings>
-    <Properties />
-    <TargetsForReferences />
-    <TargetsForItems />
-    <Extensions />
-    <ExtensionSources />
-    <Measure>None</Measure>
-    <NoBuild>true</NoBuild>
-    <Build>false</Build>
-    <NoCheckForUpdates>true</NoCheckForUpdates>
-    <CustomSettingsProfiles />
-    <OutputFile>inspection.html</OutputFile>
-    <OutputFileFormats>
-        <OutputFileFormat>Html</OutputFileFormat>
-    </OutputFileFormats>
-    <ParallelJobs>0</ParallelJobs>
-    <UseAbsolutePaths>false</UseAbsolutePaths>
-    <NoSolutionWideAnalysis>false</NoSolutionWideAnalysis>
-    <SolutionWideAnalysis>false</SolutionWideAnalysis>
-    <IncludedProjects />
-    <DumpIssuesTypes>false</DumpIssuesTypes>
-    <MinSeverity>SUGGESTION</MinSeverity>
-    <DaemonProcessKind>SOLUTION_ANALYSIS</DaemonProcessKind>
+
+<InspectCodeOptions>
+  <Debug>false</Debug>
+  <Verbosity>WARN</Verbosity>
+  <SolutionFile>.\LostBlocks.sln</SolutionFile>
+  <DisabledSettingsLayers />
+  <SuppressBuildInSettings>false</SuppressBuildInSettings>
+  <Properties />
+  <TargetsForReferences />
+  <TargetsForItems />
+  <Extensions />
+  <ExtensionSources />
+  <Measure>None</Measure>
+  <NoBuild>true</NoBuild>
+  <Build>false</Build>
+  <NoCheckForUpdates>true</NoCheckForUpdates>
+  <CustomSettingsProfiles />
+  <OutputFile>inspection.html</OutputFile>
+  <OutputFileFormats>
+    <OutputFileFormat>Html</OutputFileFormat>
+  </OutputFileFormats>
+  <ParallelJobs>0</ParallelJobs>
+  <UseAbsolutePaths>false</UseAbsolutePaths>
+  <NoSolutionWideAnalysis>false</NoSolutionWideAnalysis>
+  <SolutionWideAnalysis>false</SolutionWideAnalysis>
+  <IncludedProjects />
+  <DumpIssuesTypes>false</DumpIssuesTypes>
+  <MinSeverity>SUGGESTION</MinSeverity>
+  <DaemonProcessKind>SOLUTION_ANALYSIS</DaemonProcessKind>
 </InspectCodeOptions>
