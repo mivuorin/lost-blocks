@@ -42,7 +42,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "http-test",
+  "name": "Dark Gray",
   "rgb": "0F0F0F",
   "isTransparent": false
 }
@@ -54,7 +54,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "update-test",
+  "name": "Almost Black",
   "rgb": "010101",
   "isTransparent": true
 }
@@ -81,7 +81,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "http-test"
+  "name": "Developers"
 }
 
 ### Update category
@@ -91,7 +91,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "update-test"
+  "name": "Testers"
 }
 
 ### Delete category
@@ -123,11 +123,41 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "updated-name",
+  "name": "updated-part-name",
   "categoryId": 4408
 }
 
 ### Delete part
 
 DELETE {{root}}/part/http-test
+Accept: application/json
+
+### Create set
+
+POST {{root}}/set
+Content-Type: application/json
+Accept: application/json
+
+{
+  "setNum": "http-test",
+  "name": "set-name",
+  "year": 2025,
+  "themeId": 1
+}
+
+### Update set
+
+PUT {{root}}/set/http-test
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "updated-set-name",
+  "year": 2025,
+  "themeId": 1
+}
+
+### Delete set
+
+DELETE {{root}}/set/http-test
 Accept: application/json

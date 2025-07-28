@@ -288,13 +288,15 @@ public class LegoContext(DbContextOptions<LegoContext> options) : DbContext(opti
                 .HasMany<LegoInventory>(e => e.Inventories)
                 .WithOne(e => e.Set)
                 .HasForeignKey(e => e.SetNum)
-                .HasPrincipalKey(e => e.SetNum);
+                .HasPrincipalKey(e => e.SetNum)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity
                 .HasMany<LegoInventorySet>(e => e.InventorySets)
                 .WithOne(e => e.Set)
                 .HasForeignKey(e => e.SetNum)
-                .HasPrincipalKey(e => e.SetNum);
+                .HasPrincipalKey(e => e.SetNum)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<LegoTheme>(entity =>

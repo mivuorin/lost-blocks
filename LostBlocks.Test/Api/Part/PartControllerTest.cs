@@ -111,7 +111,7 @@ public class PartControllerTest : DatabaseTest
 
     [Theory]
     [LegoAutoData]
-    public async Task Delete_removes_category(LegoPart part, LegoPartCategory category)
+    public async Task Delete_removes_part(LegoPart part, LegoPartCategory category)
     {
         part.Category = category;
 
