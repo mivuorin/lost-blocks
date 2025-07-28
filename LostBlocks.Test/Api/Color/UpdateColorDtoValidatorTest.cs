@@ -2,7 +2,7 @@
 using LostBlocks.Api.Color;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Color;
+namespace LostBlocks.Test.Api.Color;
 
 public class UpdateColorDtoValidatorTest
 {

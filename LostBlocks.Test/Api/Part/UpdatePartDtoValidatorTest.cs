@@ -2,7 +2,7 @@
 using LostBlocks.Api.Part;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Part;
+namespace LostBlocks.Test.Api.Part;
 
 public class UpdatePartDtoValidatorTest
 {

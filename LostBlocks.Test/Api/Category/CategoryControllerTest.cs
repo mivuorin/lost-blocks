@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Category;
+namespace LostBlocks.Test.Api.Category;
 
 public class CategoryControllerTest : DatabaseTest
 {

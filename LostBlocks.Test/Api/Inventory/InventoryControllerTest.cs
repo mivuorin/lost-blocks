@@ -5,7 +5,7 @@ using LostBlocks.Test.AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Inventory;
+namespace LostBlocks.Test.Api.Inventory;
 
 public class InventoryControllerTest : DatabaseTest
 {

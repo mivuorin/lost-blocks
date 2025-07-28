@@ -5,7 +5,7 @@ using LostBlocks.Test.AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Color;
+namespace LostBlocks.Test.Api.Color;
 
 public class ColorControllerTest : DatabaseTest
 {

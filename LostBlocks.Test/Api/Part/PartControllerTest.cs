@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Part;
+namespace LostBlocks.Test.Api.Part;
 
 public class PartControllerTest : DatabaseTest
 {

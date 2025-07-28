@@ -6,7 +6,7 @@ using LostBlocks.Test.AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Set;
+namespace LostBlocks.Test.Api.Set;
 
 public class SetDetailsControllerTest : DatabaseTest
 {

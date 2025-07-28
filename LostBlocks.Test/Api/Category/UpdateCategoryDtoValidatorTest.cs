@@ -2,7 +2,7 @@
 using LostBlocks.Api.Category;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Category;
+namespace LostBlocks.Test.Api.Category;
 
 public class UpdateCategoryDtoValidatorTest
 {

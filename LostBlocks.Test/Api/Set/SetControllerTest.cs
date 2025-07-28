@@ -4,7 +4,7 @@ using LostBlocks.Models;
 using LostBlocks.Test.AutoFixture;
 using Xunit;
 
-namespace LostBlocks.Test.Controllers.Set;
+namespace LostBlocks.Test.Api.Set;
 
 public class SetControllerTest : DatabaseTest
 {
