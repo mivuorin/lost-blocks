@@ -29,7 +29,7 @@ public class SetDetailsControllerTest : DatabaseTest
 
         var result = await controller.Get(set.SetNum);
 
-        var expected = new LegoSetDetailsDto
+        var expected = new SetDetailsDto
         {
             Name = set.Name,
             Year = set.Year,

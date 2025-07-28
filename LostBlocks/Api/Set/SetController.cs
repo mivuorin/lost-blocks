@@ -9,12 +9,12 @@ namespace LostBlocks.Api.Set;
 public class SetController(LegoContext context) : ControllerBase
 {
     [HttpGet]
-    public async Task<IEnumerable<LegoSetDto>> Query([FromQuery] int themeId)
+    public async Task<IEnumerable<SetDto>> Query([FromQuery] int themeId)
     {
         return await context
             .Sets
             .Where(s => s.ThemeId == themeId)
-            .Select(s => new LegoSetDto
+            .Select(s => new SetDto
             {
                 SetNum = s.SetNum,
                 Name = s.Name,

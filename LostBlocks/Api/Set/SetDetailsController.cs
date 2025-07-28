@@ -10,12 +10,12 @@ namespace LostBlocks.Api.Set;
 public class SetDetailsController(LegoContext context) : ControllerBase
 {
     [HttpGet("{setNum}")]
-    public async Task<ActionResult<LegoSetDetailsDto>> Get(string setNum)
+    public async Task<ActionResult<SetDetailsDto>> Get(string setNum)
     {
-        LegoSetDetailsDto? found = await context
+        SetDetailsDto? found = await context
             .Sets
             .Where(s => s.SetNum == setNum)
-            .Select(s => new LegoSetDetailsDto
+            .Select(s => new SetDetailsDto
             {
                 Name = s.Name,
                 Year = s.Year,

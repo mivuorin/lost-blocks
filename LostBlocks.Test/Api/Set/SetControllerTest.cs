@@ -45,9 +45,9 @@ public class SetControllerTest : DatabaseTest
 
         var result = await controller.Query(theme.Id);
 
-        LegoSetDto actual = result.Single(dto => dto.SetNum == set.SetNum);
+        SetDto actual = result.Single(dto => dto.SetNum == set.SetNum);
 
-        var expected = new LegoSetDto
+        var expected = new SetDto
         {
             SetNum = set.SetNum,
             Name = set.Name,
