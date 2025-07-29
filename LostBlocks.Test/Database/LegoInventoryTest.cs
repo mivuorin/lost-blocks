@@ -27,6 +27,7 @@ public class LegoInventoryTest(DatabaseFixture fixture) : DatabaseTest(fixture)
     [LegoAutoData]
     public void Has_one_LegoSet(LegoInventory inventory, LegoSet set)
     {
+        // TODO This relation is wrong.
         inventory.Set = set;
 
         Context.Inventories.Add(inventory);

@@ -96,4 +96,46 @@ public class InventoryControllerTest : DatabaseTest
         var result = await controller.Get(-1);
         result.Result.Should().BeOfType<NotFoundResult>();
     }
+
+    [Theory]
+    [LegoAutoData]
+    public async Task Post_saves_new_inventory(int version, string setNum)
+    {
+        var inventoryDto = new CreateInventoryDto
+        {
+            Version = version,
+            SetNum = setNum
+        };
+
+        ActionResult result = await controller.Post(inventoryDto);
+        result.Should().BeOfType<CreatedAtActionResult>();
+
+        var createdResult = (CreatedAtActionResult)result;
+        createdResult.Value.Should().BeOfType<int>();
+        createdResult.ActionName.Should().Be(nameof(InventoryController.Get));
+
+        var actualId = (int)createdResult.Value;
+
+        LegoInventory actual = Context.Inventories.Single(i => i.Id == actualId);
+
+        actual.Should().NotBeNull();
+
+        actual.Version.Should().Be(version);
+    }
+
+    [Theory]
+    [LegoAutoData]
+    public async Task Delete_removes_inventory(LegoInventory inventory)
+    {
+        inventory.SetNum = "todo";
+
+        Context.Inventories.Add(inventory);
+        Context.SaveChanges();
+
+        await controller.Delete(inventory.Id);
+
+        LegoInventory? actual = Context.Inventories.SingleOrDefault(i => i.Id == inventory.Id);
+
+        actual.Should().BeNull();
+    }
 }

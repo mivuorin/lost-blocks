@@ -161,3 +161,19 @@ Accept: application/json
 
 DELETE {{root}}/set/http-test
 Accept: application/json
+
+### Create inventory
+
+POST {{root}}/inventory
+Content-Type: application/json
+Accept: application/json
+
+{
+  "setNum": "http-test",
+  "version": 1
+}
+
+### Delete inventory
+
+DELETE {{root}}/inventory/29400
+Accept: application/json

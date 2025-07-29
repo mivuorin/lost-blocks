@@ -2,9 +2,9 @@
 
 public class LegoInventorySet
 {
-    public int InventoryId { get; set; }
-    public string SetNum { get; set; } = null!;
-    public int Quantity { get; set; }
-    public required LegoInventory Inventory { get; set; }
-    public required LegoSet Set { get; set; }
+    public required int InventoryId { get; set; }
+    public required string SetNum { get; set; }
+    public required int Quantity { get; set; }
+    public LegoInventory Inventory { get; set; } = null!;
+    public LegoSet Set { get; set; } = null!;
 }

@@ -164,7 +164,8 @@ public class SetDetailsControllerTest : DatabaseTest
             Set = set,
             Inventory = inventory,
             SetNum = set.SetNum,
-            Quantity = 1
+            Quantity = 1,
+            InventoryId = inventory.Id
         };
 
         Context.InventorySets.Add(inventorySet);

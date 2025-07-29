@@ -3,9 +3,9 @@
 public class LegoInventory
 {
     public int Id { get; set; }
-    public int Version { get; set; }
-    public string SetNum { get; set; } = null!;
+    public required int Version { get; set; }
+    public required string SetNum { get; set; } = null!;
     public ICollection<LegoInventoryPart> InventoryParts { get; set; } = [];
-    public required LegoSet Set { get; set; }
+    public LegoSet Set { get; set; } = null!;
     public ICollection<LegoInventorySet> InventorySets { get; set; } = [];
 }

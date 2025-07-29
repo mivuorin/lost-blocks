@@ -10,6 +10,7 @@ namespace LostBlocks.Api.Inventory;
 [Route("inventory")]
 public class InventoryController(LegoContext context) : ControllerBase
 {
+    // TODO Query inventories by setNumber and version?
     [HttpGet("{inventoryId:int}")]
     public async Task<ActionResult<InventoryDetailsDto>> Get(int inventoryId)
     {
@@ -64,5 +65,31 @@ public class InventoryController(LegoContext context) : ControllerBase
             Transparent = ip.Color.IsTransparent,
             Category = ip.Part.Category.Name
         };
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Post(CreateInventoryDto inventoryDto)
+    {
+        // TODO Check is set actually exist?
+        var inventory = new LegoInventory
+        {
+            Version = inventoryDto.Version,
+            SetNum = inventoryDto.SetNum
+        };
+
+        context.Inventories.Add(inventory);
+        await context.SaveChangesAsync();
+
+        return CreatedAtAction("Get", new { inventoryId = inventory.Id }, inventory.Id);
+    }
+
+    [HttpDelete("{inventoryId:int}")]
+    public async Task<ActionResult> Delete(int inventoryId)
+    {
+        await context
+            .Inventories.Where(i => i.Id == inventoryId)
+            .ExecuteDeleteAsync();
+
+        return NoContent();
     }
 }

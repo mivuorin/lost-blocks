@@ -1,13 +1,10 @@
-﻿namespace LostBlocks.Models;
+namespace LostBlocks.Api.InventoryPart;
 
-public class LegoInventoryPart
+public record CreateInventoryPartDto
 {
     public required int InventoryId { get; set; }
     public required string PartNum { get; set; }
     public required int ColorId { get; set; }
     public required int Quantity { get; set; }
     public required bool IsSpare { get; set; }
-    public LegoInventory Inventory { get; set; } = null!;
-    public LegoColor Color { get; set; } = null!;
-    public LegoPart Part { get; set; } = null!;
 }
